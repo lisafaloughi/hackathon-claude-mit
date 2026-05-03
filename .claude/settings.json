@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/lisafaloughi/Desktop/hackathon-claude-mit/index.html)"
+    ]
+  }
+}

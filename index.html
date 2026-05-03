@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteIQ — Your Voice, Your Match</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #3730a3;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(79,70,229,0.3);
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+    .logo span { color: #a5f3fc; }
+    .step-indicator { display: flex; gap: 6px; align-items: center; }
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); transition: all 0.3s;
+    }
+    .step-dot.active { background: white; transform: scale(1.3); }
+    .step-dot.done { background: var(--accent); }
+
+    /* ── MAIN CONTAINER ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    /* ── SCREEN TRANSITIONS ── */
+    .screen { display: none; animation: fadeIn 0.4s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .form-label .optional { color: var(--muted); font-weight: 400; }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 16px;
+      border: 2px solid var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.18s;
+      background: white;
+      color: var(--text);
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--primary-light); color: var(--primary); }
+    .chip.selected { border-color: var(--primary); background: var(--primary); color: white; }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    .form-input:focus { border-color: var(--primary); }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+    .form-select:focus { border-color: var(--primary); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(79,70,229,0.35); }
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+      width: 100%;
+    }
+    .btn-accent:hover { background: #059669; transform: translateY(-1px); }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-row .btn { flex: 1; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap { margin-bottom: 24px; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 100px;
+      transition: width 0.5s ease;
+    }
+
+    /* ── SLIDER QUESTION ── */
+    .slider-question {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .q-topic {
+      display: inline-block;
+      background: #eef2ff;
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+    .q-title { font-size: 1rem; font-weight: 600; margin-bottom: 18px; }
+
+    .slider-wrap { margin-bottom: 16px; }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input[type=range] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 100px;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(to right, var(--primary) 0%, var(--primary) 50%, var(--border) 50%, var(--border) 100%);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 2px 8px rgba(79,70,229,0.4);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .importance-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .importance-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .imp-chip {
+      padding: 5px 12px;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--muted);
+    }
+    .imp-chip:hover { border-color: var(--primary-light); color: var(--primary); }
+    .imp-chip.sel-low { border-color: #94a3b8; background: #f1f5f9; color: #475569; }
+    .imp-chip.sel-med { border-color: var(--warning); background: #fef3c7; color: #92400e; }
+    .imp-chip.sel-high { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
+    .imp-chip.sel-critical { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+
+    .q-note-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      outline: none;
+      resize: none;
+      height: 60px;
+      transition: border-color 0.2s;
+      margin-top: 12px;
+      font-family: inherit;
+    }
+    .q-note-input:focus { border-color: var(--primary); }
+
+    /* ── LOADING ── */
+    .loading-screen {
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .spinner {
+      width: 60px; height: 60px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .loading-sub { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── CANDIDATES ── */
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 480px) { .candidates-grid { grid-template-columns: 1fr; } }
+
+    .candidate-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .candidate-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    .candidate-card.selected-candidate { border-color: var(--primary); }
+
+    .candidate-avatar {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .candidate-avatar-wrap {
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .candidate-avatar-img {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+    }
+
+    .candidate-info { padding: 14px; }
+    .candidate-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; }
+    .candidate-party {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .party-blue { background: #dbeafe; color: #1d4ed8; }
+    .party-red { background: #fee2e2; color: #b91c1c; }
+    .party-green { background: #d1fae5; color: #065f46; }
+    .party-orange { background: #ffedd5; color: #c2410c; }
+
+    .candidate-tagline { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+    .candidate-match-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      box-shadow: 0 2px 8px rgba(79,70,229,0.4);
+    }
+    .candidate-match-badge.top { background: var(--accent); }
+
+    /* ── CANDIDATE DETAIL PANEL ── */
+    .detail-panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: white;
+    }
+    .detail-avatar { font-size: 56px; flex-shrink: 0; }
+    .detail-name { font-size: 1.2rem; font-weight: 700; }
+    .detail-role { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+    .detail-body { padding: 20px; }
+
+    .detail-tabs { display: flex; gap: 4px; margin-bottom: 20px; overflow-x: auto; }
+    .detail-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      color: var(--muted);
+      border: none;
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .detail-tab.active { background: var(--primary); color: white; }
+    .detail-tab:hover:not(.active) { background: var(--border); color: var(--text); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .position-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .position-item:last-child { border-bottom: none; }
+    .position-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .position-topic { font-weight: 600; font-size: 0.875rem; margin-bottom: 2px; }
+    .position-stance { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+    .news-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+    .news-headline { font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; }
+    .news-summary { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+    /* ── MATCH RESULTS ── */
+    .match-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      color: white;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .match-hero-emoji { font-size: 3rem; margin-bottom: 8px; }
+    .match-hero-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .match-hero-sub { opacity: 0.85; font-size: 0.9rem; }
+
+    .match-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+    .match-item {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .match-item:hover { border-color: var(--primary-light); transform: translateX(3px); }
+    .match-item.top-match { border-color: var(--accent); }
+
+    .match-avatar-sm { font-size: 2.2rem; flex-shrink: 0; }
+    .match-info { flex: 1; }
+    .match-name { font-weight: 700; font-size: 0.95rem; }
+    .match-party-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .match-bar-wrap { position: relative; }
+    .match-bar-bg {
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .match-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+    .match-pct {
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .top-badge {
+      background: var(--accent);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .align-section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+    .align-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .align-tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+    .align-tag.agree { background: #d1fae5; color: #065f46; }
+    .align-tag.disagree { background: #fee2e2; color: #991b1b; }
+
+    .align-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 0.82rem;
+    }
+    .align-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .align-dot.green { background: var(--accent); }
+    .align-dot.red { background: var(--danger); }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 16px;
+    }
+    .disclaimer-title { font-weight: 700; font-size: 0.875rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .disclaimer-text { font-size: 0.82rem; color: #78350f; line-height: 1.5; }
+
+    /* ── WELCOME ── */
+    .welcome-hero {
+      text-align: center;
+      padding: 40px 24px 32px;
+    }
+    .welcome-emoji { font-size: 4rem; margin-bottom: 16px; }
+    .welcome-title { font-size: 2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .welcome-title span { color: var(--primary); }
+    .welcome-sub { color: var(--muted); font-size: 1rem; line-height: 1.6; margin-bottom: 32px; }
+
+    .feature-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; text-align: left; }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .feature-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .feature-text { font-size: 0.9rem; color: var(--text); }
+    .feature-text strong { display: block; font-weight: 600; margin-bottom: 1px; }
+    .feature-text span { color: var(--muted); font-size: 0.82rem; }
+
+    /* ── FLOATING BACK ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+    .back-btn:hover { color: var(--text); }
+
+    /* ── SVG Avatars ── */
+    .svg-avatar { width: 100%; aspect-ratio: 1; display: block; }
+
+    /* Tooltip */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip-trigger { cursor: help; color: var(--muted); font-size: 0.8rem; }
+    .tooltip-box {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+    .tooltip-wrap:hover .tooltip-box { opacity: 1; }
+
+    /* News panel */
+    .context-panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .context-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .context-stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .context-stat:last-child { border-bottom: none; }
+    .context-stat-icon { font-size: 1.1rem; }
+    .context-stat-label { color: var(--muted); font-size: 0.78rem; }
+    .context-stat-val { font-weight: 600; }
+
+    .collapsible-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .collapsible-arrow { transition: transform 0.2s; color: var(--muted); }
+    .collapsible-arrow.open { transform: rotate(180deg); }
+    .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
+    .collapsible-body.open { max-height: 1000px; }
+
+    @media (max-width: 600px) {
+      .welcome-title { font-size: 1.6rem; }
+      .card { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">Vote<span>IQ</span></div>
+  <div class="step-indicator" id="stepDots">
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+    <div class="step-dot" data-step="5"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 0 — WELCOME
+  ══════════════════════════════════════════ -->
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome-hero">
+      <div class="welcome-emoji">🗳️</div>
+      <h1 class="welcome-title">Your Vote.<br/><span>Your Match.</span></h1>
+      <p class="welcome-sub">Understand candidates in minutes. See who aligns with your real-life priorities — no jargon, no pressure.</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">👤</div>
+        <div class="feature-text">
+          <strong>Tell us about yourself</strong>
+          <span>2 minutes — personal context makes results meaningful</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚖️</div>
+        <div class="feature-text">
+          <strong>Set your priorities</strong>
+          <span>Sliders, not essays — fast and intuitive</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-text">
+          <strong>See your match</strong>
+          <span>Compare candidates to your actual values</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen('screen-profile')">Get Started →</button>
+    <div class="disclaimer" style="margin-top:16px;">
+      <div class="disclaimer-title">⚠️ Important</div>
+      <div class="disclaimer-text">This tool does <strong>not</strong> tell you who to vote for. It helps you understand candidates and compare priorities. Candidates and data shown are <strong>synthetic examples</strong> for demonstration purposes.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 1 — PROFILE
+  ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-profile">
+    <button class="back-btn" onclick="goToScreen('screen-welcome')">← Back</button>
+    <div class="card">
+      <h2 class="section-title">About You</h2>
+      <p class="section-sub">This helps us ask the right questions and give you relevant results. <strong>All optional except location.</strong></p>
+
+      <div class="form-group">
+        <label class="form-label">Age range</label>
+        <div class="chip-group" id="age-group">
+          <div class="chip" onclick="selectChip(this,'age')">Under 18</div>
+          <div class="chip" onclick="selectChip(this,'age')">18–24</div>
+          <div class="chip" onclick="selectChip(this,'age')">25–34</div>
+          <div class="chip" onclick="selectChip(this,'age')">35–44</div>
+          <div class="chip" onclick="selectChip(this,'age')">45–59</div>
+          <div class="chip" onclick="selectChip(this,'age')">60+</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Gender <span class="optional">(optional)</span></label>
+        <div class="chip-group" id="gender-group">
+          <div class="chip" onclick="selectChip(this,'gender')">Male</div>
+          <div class="chip" onclick="selectChip(this,'gender')">Female</div>
+          <div class="chip" onclick="selectChip(this,'gender')">Non-binary</div>
+          <div class="chip" onclick="selectChip(this,'gender')">Prefer not to say</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">State / Region <span class="optional">*</span></label>
+        <select class="form-select" id="location">
+          <option value="">Select your state...</option>
+          <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+          <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+          <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+          <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
+          <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
+          <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+          <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
+          <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
+          <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+          <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
+          <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+          <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
+          <option>Wisconsin</option><option>Wyoming</option>
+          <option>— Outside the US —</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Occupation</label>
+        <div class="chip-group" id="occupation-group">
+          <div class="chip" onclick="selectChip(this,'occupation')">Student</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Healthcare</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Tech / Engineering</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Education</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Retail / Service</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Business / Finance</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Trades / Construction</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Self-employed</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Unemployed / Job seeker</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Retired</div>
+          <div class="chip" onclick="selectChip(this,'occupation')">Other</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Income range <span class="optional">(optional)</span></label>
+        <div class="chip-group" id="income-group">
+          <div class="chip" onclick="selectChip(this,'income')">Under $30k</div>
+          <div class="chip" onclick="selectChip(this,'income')">$30k–60k</div>
+          <div class="chip" onclick="selectChip(this,'income')">$60k–100k</div>
+          <div class="chip" onclick="selectChip(this,'income')">$100k–200k</div>
+          <div class="chip" onclick="selectChip(this,'income')">Over $200k</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Family size <span class="optional">(optional)</span></label>
+        <div class="chip-group" id="family-group">
+          <div class="chip" onclick="selectChip(this,'family')">Just me</div>
+          <div class="chip" onclick="selectChip(this,'family')">Me + partner</div>
+          <div class="chip" onclick="selectChip(this,'family')">Small family (1–2 kids)</div>
+          <div class="chip" onclick="selectChip(this,'family')">Large family (3+ kids)</div>
+          <div class="chip" onclick="selectChip(this,'family')">Caring for elderly</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Do you own or rent your home? <span class="optional">(optional)</span></label>
+        <div class="chip-group" id="housing-group">
+          <div class="chip" onclick="selectChip(this,'housing')">Own</div>
+          <div class="chip" onclick="selectChip(this,'housing')">Rent</div>
+          <div class="chip" onclick="selectChip(this,'housing')">Living with family</div>
+          <div class="chip" onclick="selectChip(this,'housing')">Other</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nationality / Background <span class="optional">(optional)</span></label>
+        <div class="chip-group" id="nationality-group">
+          <div class="chip" onclick="selectChip(this,'nationality')">US Born</div>
+          <div class="chip" onclick="selectChip(this,'nationality')">Naturalized Citizen</div>
+          <div class="chip" onclick="selectChip(this,'nationality')">Permanent Resident</div>
+          <div class="chip" onclick="selectChip(this,'nationality')">Visa / Work Permit</div>
+          <div class="chip" onclick="selectChip(this,'nationality')">International</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="submitProfile()" style="margin-top:8px;">Continue → Set My Priorities</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 2 — SURVEY
+  ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-survey">
+    <button class="back-btn" onclick="goToScreen('screen-profile')">← Back</button>
+    <div class="card" style="margin-bottom:16px;">
+      <h2 class="section-title">Your Priorities</h2>
+      <p class="section-sub">Move each slider to show your view. Set the importance of each topic. There are no right or wrong answers.</p>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="survey-progress-label">Question 1 of 12</span>
+          <span id="survey-progress-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="survey-progress-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="survey-questions"></div>
+    <div id="survey-personalized"></div>
+    <button class="btn btn-accent" onclick="submitSurvey()">See My Candidate Matches →</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 3 — LOADING
+  ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-loading">
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">Analyzing your priorities...</div>
+      <div class="loading-sub" id="loading-sub">Comparing with candidate positions</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 4 — CANDIDATES
+  ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-candidates">
+    <button class="back-btn" onclick="goToScreen('screen-survey')">← Back</button>
+    <div class="card" style="margin-bottom:0;">
+      <h2 class="section-title">The Candidates</h2>
+      <p class="section-sub">Click any candidate to learn more — their positions, background, and recent news.</p>
+    </div>
+    <div class="candidates-grid" id="candidates-grid"></div>
+    <div id="candidate-detail-area"></div>
+    <button class="btn btn-primary" onclick="goToScreen('screen-results')" style="margin-top:8px;">View My Match Results →</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 5 — RESULTS
+  ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-results">
+    <button class="back-btn" onclick="goToScreen('screen-candidates')">← Back to Candidates</button>
+
+    <div class="match-hero">
+      <div class="match-hero-emoji">🎯</div>
+      <div class="match-hero-title" id="result-hero-title">Your top match is ready</div>
+      <div class="match-hero-sub" id="result-hero-sub">Based on your priorities and profile</div>
+    </div>
+
+    <div class="match-list" id="match-list"></div>
+
+    <div id="detailed-breakdown"></div>
+
+    <div class="context-panel" style="margin-top:8px;">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <div class="context-title" style="margin-bottom:0;">📊 Current Political Context</div>
+        <div class="collapsible-arrow">▼</div>
+      </div>
+      <div class="collapsible-body">
+        <div style="padding-top:14px;">
+          <div class="context-stat">
+            <div class="context-stat-icon">📈</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">GDP Growth (2024)</div>
+              <div class="context-stat-val">+2.4% — moderate expansion</div>
+            </div>
+          </div>
+          <div class="context-stat">
+            <div class="context-stat-icon">💼</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">Unemployment Rate</div>
+              <div class="context-stat-val">4.1% — near historic lows</div>
+            </div>
+          </div>
+          <div class="context-stat">
+            <div class="context-stat-icon">🏥</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">Healthcare</div>
+              <div class="context-stat-val">30M+ uninsured, debate on expansion</div>
+            </div>
+          </div>
+          <div class="context-stat">
+            <div class="context-stat-icon">🌡️</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">Climate Policy</div>
+              <div class="context-stat-val">Paris Agreement active, IRA investments ongoing</div>
+            </div>
+          </div>
+          <div class="context-stat">
+            <div class="context-stat-icon">🏫</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">Student Debt</div>
+              <div class="context-stat-val">~$1.7 trillion outstanding — major policy debate</div>
+            </div>
+          </div>
+          <div class="context-stat">
+            <div class="context-stat-icon">🛂</div>
+            <div style="flex:1;">
+              <div class="context-stat-label">Immigration</div>
+              <div class="context-stat-val">Border crossings at record levels, reform stalled in Congress</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-title">⚠️ A note from VoteIQ</div>
+      <div class="disclaimer-text">
+        <strong>We do not tell you who to vote for.</strong><br/>
+        This tool is designed to help you understand candidates, compare priorities, and see how policies may affect you. Match scores are based on your stated preferences and <em>synthetic</em> candidate data created for this demo. Always research real candidates before voting.
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" onclick="restart()" style="margin-top:16px; width:100%;">↩ Start Over</button>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+const state = {
+  profile: {},
+  answers: {},  // questionId -> { value: 0-100, importance: 'low'|'med'|'high'|'critical' }
+  candidates: [],
+  matches: []
+};
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  updateStepDots(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepDots(screenId) {
+  const map = {
+    'screen-welcome': 0,
+    'screen-profile': 1,
+    'screen-survey': 2,
+    'screen-loading': 3,
+    'screen-candidates': 4,
+    'screen-results': 5
+  };
+  const current = map[screenId] || 0;
+  document.querySelectorAll('.step-dot').forEach((dot, i) => {
+    dot.classList.remove('active','done');
+    const step = parseInt(dot.dataset.step);
+    if (step < current) dot.classList.add('done');
+    else if (step === current) dot.classList.add('active');
+  });
+}
+
+// ═══════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════
+function selectChip(el, group) {
+  const parent = el.closest('.chip-group');
+  parent.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.profile[group] = el.textContent.trim();
+}
+
+function submitProfile() {
+  state.profile.location = document.getElementById('location').value;
+  buildSurvey();
+  goToScreen('screen-survey');
+}
+
+// ═══════════════════════════════════════════
+// SURVEY BUILDER
+// ═══════════════════════════════════════════
+const BASE_QUESTIONS = [
+  { id:'economy', topic:'Economy', icon:'💰', title:'Government role in the economy',
+    left:'Less regulation, free market', right:'More regulation, public investment' },
+  { id:'taxes', topic:'Taxes', icon:'📊', title:'Tax policy',
+    left:'Lower taxes for everyone', right:'Higher taxes on wealthy & corporations' },
+  { id:'healthcare', topic:'Healthcare', icon:'🏥', title:'Healthcare system',
+    left:'Private / market-based healthcare', right:'Universal public healthcare' },
+  { id:'immigration', topic:'Immigration', icon:'🛂', title:'Immigration policy',
+    left:'Stricter limits & enforcement', right:'More open pathways & amnesty' },
+  { id:'climate', topic:'Climate', icon:'🌿', title:'Climate & energy policy',
+    left:'Energy independence, fossil fuels', right:'Green transition, net-zero targets' },
+  { id:'guns', topic:'Gun Policy', icon:'🔫', title:'Gun rights & restrictions',
+    left:'Protect 2nd Amendment broadly', right:'Stricter gun control laws' },
+  { id:'education', topic:'Education', icon:'🏫', title:'Education funding & control',
+    left:'Local/private control, school choice', right:'Federal funding, public schools' },
+  { id:'social', topic:'Social Issues', icon:'🏳️‍🌈', title:'Social & civil rights policy',
+    left:'Traditional values, less federal intervention', right:'Expand rights & protections' },
+  { id:'housing', topic:'Housing', icon:'🏠', title:'Housing affordability',
+    left:'Let the market set prices', right:'Government rent control & subsidies' },
+  { id:'spending', topic:'Spending', icon:'🏛️', title:'Government spending',
+    left:'Cut spending, reduce deficit', right:'Invest more in social programs' },
+];
+
+const PERSONALIZED_QUESTIONS = {
+  Student: [
+    { id:'student_loans', topic:'Student Loans', icon:'🎓', title:'Student loan policy',
+      left:'No government forgiveness', right:'Cancel / reduce student debt' },
+    { id:'college_cost', topic:'College Access', icon:'📚', title:'College affordability',
+      left:'Keep private tuition market', right:'Make public college free' },
+  ],
+  Healthcare: [
+    { id:'nurse_staffing', topic:'Healthcare Workers', icon:'👩‍⚕️', title:'Hospital staffing regulations',
+      left:'Leave to hospitals to decide', right:'Mandate nurse-to-patient ratios' },
+  ],
+  'Retail / Service': [
+    { id:'min_wage', topic:'Minimum Wage', icon:'💵', title:'Federal minimum wage',
+      left:'Keep current or lower', right:'Raise significantly (e.g. $20+)' },
+  ],
+  Retired: [
+    { id:'social_security', topic:'Social Security', icon:'👴', title:'Social Security & Medicare',
+      left:'Reform / privatize for sustainability', right:'Expand and protect benefits' },
+  ],
+  'Business / Finance': [
+    { id:'corp_tax', topic:'Corporate Tax', icon:'🏢', title:'Corporate tax rates',
+      left:'Lower to stimulate growth', right:'Raise to fund public services' },
+  ],
+  'Trades / Construction': [
+    { id:'infrastructure', topic:'Infrastructure', icon:'🏗️', title:'Infrastructure investment',
+      left:'Private-sector led projects', right:'Large public works programs' },
+    { id:'unions', topic:'Labor Rights', icon:'👷', title:'Union power & labor rights',
+      left:'Less union regulation', right:'Strengthen unions & worker protections' },
+  ],
+  'Self-employed': [
+    { id:'self_employ_tax', topic:'Self-Employment', icon:'💼', title:'Self-employment tax burden',
+      left:'Reduce taxes for small businesses', right:'Expand social safety net coverage' },
+  ],
+};
+
+const HOUSING_QUESTIONS = {
+  Rent: [
+    { id:'rent_control', topic:'Rent & Housing', icon:'🏘️', title:'Rent control policies',
+      left:'Against rent control', right:'Strong rent control laws' },
+  ],
+  Own: [
+    { id:'property_tax', topic:'Property Tax', icon:'🏡', title:'Property tax policy',
+      left:'Reduce property taxes', right:'Use property taxes to fund schools' },
+  ],
+};
+
+const IMMIGRATION_QUESTIONS = {
+  'Naturalized Citizen': [
+    { id:'path_citizenship', topic:'Immigration Path', icon:'🗽', title:'Path to citizenship',
+      left:'Strict requirements only', right:'Easier / faster pathways' },
+  ],
+  'Permanent Resident': [
+    { id:'path_citizenship', topic:'Immigration Path', icon:'🗽', title:'Path to citizenship',
+      left:'Strict requirements only', right:'Easier / faster pathways' },
+  ],
+  'Visa / Work Permit': [
+    { id:'visa_reform', topic:'Visa System', icon:'✈️', title:'Work visa & immigration reform',
+      left:'Keep current system', right:'Major reform / expansion' },
+  ],
+};
+
+function buildSurvey() {
+  let questions = [...BASE_QUESTIONS];
+
+  // Add personalized questions based on occupation
+  const occ = state.profile.occupation;
+  if (occ && PERSONALIZED_QUESTIONS[occ]) {
+    questions = questions.concat(PERSONALIZED_QUESTIONS[occ]);
+  }
+
+  // Housing based questions
+  const housing = state.profile.housing;
+  if (housing && HOUSING_QUESTIONS[housing]) {
+    questions = questions.concat(HOUSING_QUESTIONS[housing]);
+  }
+
+  // Immigration based questions
+  const nat = state.profile.nationality;
+  if (nat && IMMIGRATION_QUESTIONS[nat]) {
+    questions = questions.concat(IMMIGRATION_QUESTIONS[nat]);
+  }
+
+  // Family size questions
+  if (state.profile.family && state.profile.family.includes('kid')) {
+    questions.push({
+      id:'childcare', topic:'Childcare', icon:'👶', title:'Childcare & parental leave',
+      left:'Leave to employers', right:'Federal paid leave & free childcare'
+    });
+  }
+
+  // Income-based
+  if (state.profile.income === 'Under $30k') {
+    questions.push({
+      id:'welfare', topic:'Social Safety Net', icon:'🤝', title:'Government assistance programs',
+      left:'Reduce welfare spending', right:'Expand food stamps, housing aid, etc.'
+    });
+  }
+
+  state.surveyQuestions = questions;
+  renderSurvey(questions);
+}
+
+function renderSurvey(questions) {
+  const container = document.getElementById('survey-questions');
+  container.innerHTML = '';
+  const total = questions.length;
+
+  questions.forEach((q, i) => {
+    const defaultVal = 50;
+    state.answers[q.id] = state.answers[q.id] || { value: defaultVal, importance: 'med' };
+
+    const div = document.createElement('div');
+    div.className = 'slider-question';
+    div.innerHTML = `
+      <div class="q-topic">${q.icon} ${q.topic}</div>
+      <div class="q-title">${q.title}</div>
+      <div class="slider-wrap">
+        <div class="slider-labels">
+          <span>${q.left}</span>
+          <span>${q.right}</span>
+        </div>
+        <input type="range" min="0" max="100" value="${defaultVal}"
+          oninput="updateSlider(this,'${q.id}')"
+          onchange="updateSurveyProgress(${total})"
+          style="background: linear-gradient(to right, var(--primary) 50%, var(--border) 50%)"/>
+      </div>
+      <div class="importance-label">How important is this topic to you?</div>
+      <div class="importance-chips" id="imp-${q.id}">
+        <div class="imp-chip" onclick="setImportance(this,'${q.id}','low')">Not important</div>
+        <div class="imp-chip sel-med" onclick="setImportance(this,'${q.id}','med')">Somewhat</div>
+        <div class="imp-chip" onclick="setImportance(this,'${q.id}','high')">Important</div>
+        <div class="imp-chip" onclick="setImportance(this,'${q.id}','critical')">🔥 Critical</div>
+      </div>
+      <textarea class="q-note-input" placeholder="Optional: explain your view... (not required)"
+        oninput="updateNote('${q.id}', this.value)"></textarea>
+    `;
+    container.appendChild(div);
+  });
+
+  updateSurveyProgress(total);
+}
+
+function updateSlider(el, id) {
+  const val = parseInt(el.value);
+  state.answers[id].value = val;
+  const pct = val + '%';
+  el.style.background = `linear-gradient(to right, var(--primary) ${pct}, var(--border) ${pct})`;
+}
+
+function setImportance(el, id, level) {
+  const parent = document.getElementById('imp-' + id);
+  parent.querySelectorAll('.imp-chip').forEach(c => {
+    c.classList.remove('sel-low','sel-med','sel-high','sel-critical');
+  });
+  el.classList.add('sel-' + level);
+  state.answers[id].importance = level;
+}
+
+function updateNote(id, val) {
+  state.answers[id].note = val;
+}
+
+function updateSurveyProgress(total) {
+  const answered = Object.keys(state.answers).length;
+  const pct = Math.min(100, Math.round((answered / total) * 100));
+  document.getElementById('survey-progress-label').textContent = `${Math.min(answered, total)} of ${total} questions`;
+  document.getElementById('survey-progress-pct').textContent = pct + '%';
+  document.getElementById('survey-progress-fill').style.width = pct + '%';
+}
+
+function submitSurvey() {
+  goToScreen('screen-loading');
+  generateCandidates();
+  simulateLoading();
+}
+
+// ═══════════════════════════════════════════
+// LOADING SIMULATION
+// ═══════════════════════════════════════════
+function simulateLoading() {
+  const messages = [
+    ['Analyzing your priorities...', 'Looking at your policy preferences'],
+    ['Generating candidate profiles...', 'Creating realistic, balanced candidates'],
+    ['Running match algorithm...', 'Comparing your answers with candidate positions'],
+    ['Calculating alignment scores...', 'Almost done!'],
+  ];
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < messages.length) {
+      document.getElementById('loading-text').textContent = messages[i][0];
+      document.getElementById('loading-sub').textContent = messages[i][1];
+      i++;
+    } else {
+      clearInterval(interval);
+      computeMatches();
+      renderCandidateGrid();
+      renderResults();
+      goToScreen('screen-candidates');
+    }
+  }, 700);
+}
+
+// ═══════════════════════════════════════════
+// CANDIDATE DATA
+// ═══════════════════════════════════════════
+function generateCandidates() {
+  state.candidates = [
+    {
+      id: 'morgan',
+      name: 'Diana Morgan',
+      party: 'Progressive Alliance',
+      partyClass: 'party-blue',
+      role: 'Former Senator • 2-term congresswoman',
+      emoji: '👩‍⚕️',
+      avatar: generateSVGAvatar('morgan', '#4f46e5', '#a78bfa', '👩'),
+      tagline: '"Healthcare and climate are not luxuries — they are rights."',
+      background: 'Harvard Law, civil rights attorney turned senator. 12 years in Congress. From Ohio.',
+      positions: {
+        economy: 75, taxes: 80, healthcare: 90, immigration: 70, climate: 92,
+        guns: 75, education: 82, social: 88, housing: 78, spending: 80,
+        student_loans: 85, college_cost: 88, path_citizenship: 80, rent_control: 76,
+        welfare: 88, childcare: 90, min_wage: 85, corp_tax: 82
+      },
+      controversies: 'Criticized for ties to pharmaceutical lobbying early in career; later became vocal advocate for drug price reform.',
+      speech: '"We cannot keep asking working families to choose between their health and their rent. My plan expands Medicare to cover all Americans, funded by a 2% wealth tax on billionaires."',
+      news: [
+        { date: 'Apr 28, 2026', headline: 'Morgan rolls out $3T climate investment plan', summary: 'Senator Morgan unveiled a sweeping green infrastructure plan, promising 4M jobs and 50% emissions reduction by 2035.' },
+        { date: 'Apr 15, 2026', headline: 'Poll: Morgan leads among voters under 35', summary: 'A new national poll shows Morgan with 54% support among Gen Z and millennial voters, largely driven by climate and student debt positions.' },
+        { date: 'Apr 2, 2026', headline: 'Morgan faces criticism on border policy flip-flop', summary: 'Critics point to Morgan\'s shift from a 2018 moderate immigration stance to her current open-pathways position.' },
+      ]
+    },
+    {
+      id: 'hayes',
+      name: 'Robert Hayes',
+      party: 'Conservative Union',
+      partyClass: 'party-red',
+      role: 'Former Governor • Business executive',
+      emoji: '👨‍💼',
+      avatar: generateSVGAvatar('hayes', '#b91c1c', '#fca5a5', '👨'),
+      tagline: '"Strong economy, secure borders, American first."',
+      background: 'MBA from Wharton, ran a regional manufacturing company for 15 years. Two-term governor of Texas.',
+      positions: {
+        economy: 20, taxes: 15, healthcare: 18, immigration: 12, climate: 15,
+        guns: 10, education: 22, social: 15, housing: 20, spending: 12,
+        student_loans: 15, college_cost: 18, path_citizenship: 12, rent_control: 15,
+        welfare: 12, childcare: 20, min_wage: 15, corp_tax: 12, property_tax: 15,
+        unions: 18, infrastructure: 35
+      },
+      controversies: 'Signed legislation restricting voting access in Texas; defended as anti-fraud measures by supporters.',
+      speech: '"America\'s greatness comes from its entrepreneurs, not its government. I will cut the red tape strangling small businesses, secure our border, and put America\'s energy independence first."',
+      news: [
+        { date: 'Apr 30, 2026', headline: 'Hayes proposes 25% corporate tax cut', summary: 'In a major policy speech, Hayes outlined a plan to slash corporate taxes, arguing it would bring manufacturing jobs back to the US.' },
+        { date: 'Apr 22, 2026', headline: 'Hayes endorsed by major farm and agriculture groups', summary: 'The National Farmers Association endorsed Hayes, citing his stance on deregulation and opposition to climate mandates on agriculture.' },
+        { date: 'Apr 10, 2026', headline: 'Controversy over Hayes\'s comments on Social Security', summary: 'Critics accused Hayes of suggesting Social Security privatization; his campaign walked back the statements as "taken out of context."' },
+      ]
+    },
+    {
+      id: 'chen',
+      name: 'Mei-Lin Chen',
+      party: 'Independent Reform',
+      partyClass: 'party-green',
+      role: 'Tech entrepreneur • Policy innovator',
+      emoji: '👩‍💻',
+      avatar: generateSVGAvatar('chen', '#065f46', '#6ee7b7', '🧑'),
+      tagline: '"Neither left nor right — forward."',
+      background: 'Stanford CS & Public Policy dual degree. Founded two clean-tech companies. First-generation American.',
+      positions: {
+        economy: 55, taxes: 48, healthcare: 65, immigration: 62, climate: 80,
+        guns: 52, education: 68, social: 70, housing: 60, spending: 55,
+        student_loans: 60, college_cost: 65, path_citizenship: 70, rent_control: 55,
+        welfare: 58, childcare: 65, min_wage: 55, corp_tax: 50, visa_reform: 75
+      },
+      controversies: 'Past donation to a conservative Super PAC raised questions among progressive supporters.',
+      speech: '"Both parties have failed you. I believe in evidence-based policy: universal basic healthcare option, targeted immigration reform, and green tech investment that creates jobs — not ideology."',
+      news: [
+        { date: 'May 1, 2026', headline: 'Chen wins CNN debate — post-debate polls surge', summary: 'Independent candidate Mei-Lin Chen was rated the winner of Tuesday\'s debate by 62% of undecided voters in a snap poll.' },
+        { date: 'Apr 20, 2026', headline: 'Chen unveils bipartisan criminal justice reform plan', summary: 'Chen\'s detailed plan combining stricter sentencing for violent crime with rehabilitation investment drew praise from both sides of the aisle.' },
+        { date: 'Apr 8, 2026', headline: 'Tech billionaire "neutral" — despite Chen\'s clean-tech background', summary: 'A report reveals no major tech donations to Chen\'s campaign, despite speculation. Her team calls it "conflict-of-interest prevention."' },
+      ]
+    },
+    {
+      id: 'reyes',
+      name: 'Marcus Reyes',
+      party: 'People\'s Coalition',
+      partyClass: 'party-orange',
+      role: 'Labor organizer • City mayor',
+      emoji: '👨‍🏭',
+      avatar: generateSVGAvatar('reyes', '#c2410c', '#fdba74', '🧔'),
+      tagline: '"Working families built this country. It\'s time they ran it."',
+      background: 'Community college graduate. Rose from warehouse worker to union leader to mayor of Detroit. First Latino major-city mayor in the Midwest.',
+      positions: {
+        economy: 82, taxes: 88, healthcare: 85, immigration: 65, climate: 70,
+        guns: 60, education: 78, social: 75, housing: 90, spending: 88,
+        student_loans: 78, college_cost: 80, rent_control: 90, welfare: 92,
+        childcare: 88, min_wage: 95, corp_tax: 90, unions: 95, infrastructure: 85,
+        social_security: 92
+      },
+      controversies: 'City under his mayoralty faced budget deficit. Opponents blame his union contracts; supporters credit improved city services.',
+      speech: '"I grew up watching my father work three jobs to keep us in our apartment. No parent should have to do that. My first bill will be a living wage mandate, universal childcare, and real rent stabilization."',
+      news: [
+        { date: 'Apr 29, 2026', headline: 'Reyes rally draws 80,000 in Chicago', summary: 'A massive rally in Grant Park underscored Reyes\'s grassroots support, especially among working-class and Latino communities.' },
+        { date: 'Apr 18, 2026', headline: 'Reyes proposes "Corporate Accountability Act"', summary: 'The plan would require all companies with over 500 employees to give workers a seat on the board of directors.' },
+        { date: 'Apr 5, 2026', headline: 'Questions raised over Detroit budget under Reyes', summary: 'A city audit found $180M shortfall during Reyes\'s term. His team argues it was inherited debt; critics point to union contract costs.' },
+      ]
+    }
+  ];
+}
+
+function generateSVGAvatar(id, color1, color2, emoji) {
+  // Returns an SVG string for a cartoon-style avatar
+  const gradId = 'grad-' + id;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svg-avatar">
+    <defs>
+      <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${color1}"/>
+        <stop offset="100%" style="stop-color:${color2}"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" fill="url(#${gradId})"/>
+    <circle cx="50" cy="38" r="20" fill="rgba(255,255,255,0.25)"/>
+    <text x="50" y="48" text-anchor="middle" font-size="26" fill="white">${emoji}</text>
+    <ellipse cx="50" cy="80" rx="26" ry="16" fill="rgba(255,255,255,0.2)"/>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════
+// MATCH COMPUTATION
+// ═══════════════════════════════════════════
+const IMPORTANCE_WEIGHTS = { low: 0.5, med: 1.0, high: 1.8, critical: 3.0 };
+
+function computeMatches() {
+  state.matches = state.candidates.map(c => {
+    let totalWeight = 0;
+    let weightedScore = 0;
+    const alignments = [];
+    const mismatches = [];
+
+    Object.keys(state.answers).forEach(qid => {
+      const ans = state.answers[qid];
+      const candidatePos = c.positions[qid];
+      if (candidatePos === undefined) return;
+
+      const weight = IMPORTANCE_WEIGHTS[ans.importance] || 1;
+      const distance = Math.abs(ans.value - candidatePos);
+      const similarity = 1 - (distance / 100);
+
+      totalWeight += weight;
+      weightedScore += similarity * weight;
+
+      const topic = (state.surveyQuestions.find(q => q.id === qid) || {}).topic || qid;
+      if (similarity > 0.75) {
+        alignments.push({ topic, score: similarity });
+      } else if (similarity < 0.4) {
+        mismatches.push({ topic, score: similarity });
+      }
+    });
+
+    const pct = totalWeight > 0 ? Math.round((weightedScore / totalWeight) * 100) : 50;
+
+    return {
+      candidate: c,
+      pct,
+      alignments: alignments.slice(0, 4),
+      mismatches: mismatches.slice(0, 3)
+    };
+  });
+
+  state.matches.sort((a, b) => b.pct - a.pct);
+}
+
+// ═══════════════════════════════════════════
+// RENDER CANDIDATES GRID
+// ═══════════════════════════════════════════
+function renderCandidateGrid() {
+  const grid = document.getElementById('candidates-grid');
+  grid.innerHTML = '';
+
+  state.matches.forEach((m, i) => {
+    const c = m.candidate;
+    const card = document.createElement('div');
+    card.className = 'candidate-card';
+    card.id = 'ccard-' + c.id;
+    card.onclick = () => toggleCandidateDetail(c.id);
+
+    card.innerHTML = `
+      <div class="candidate-avatar-wrap">
+        ${c.avatar}
+        <div class="candidate-match-badge ${i === 0 ? 'top' : ''}">${m.pct}%</div>
+      </div>
+      <div class="candidate-info">
+        <div class="candidate-name">${c.name}</div>
+        <div class="candidate-party ${c.partyClass}">${c.party}</div>
+        <div class="candidate-tagline">${c.tagline}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+let openCandidateId = null;
+
+function toggleCandidateDetail(id) {
+  const area = document.getElementById('candidate-detail-area');
+  if (openCandidateId === id) {
+    area.innerHTML = '';
+    openCandidateId = null;
+    document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected-candidate'));
+    return;
+  }
+  openCandidateId = id;
+  document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected-candidate'));
+  document.getElementById('ccard-' + id).classList.add('selected-candidate');
+
+  const m = state.matches.find(x => x.candidate.id === id);
+  const c = m.candidate;
+  const qs = state.surveyQuestions || BASE_QUESTIONS;
+
+  area.innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div class="detail-avatar">${c.emoji}</div>
+        <div>
+          <div class="detail-name">${c.name}</div>
+          <div class="detail-role">${c.role}</div>
+          <div style="margin-top:6px;"><span style="background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:100px;font-size:0.78rem;font-weight:700;">Match: ${m.pct}%</span></div>
+        </div>
+      </div>
+      <div class="detail-body">
+        <div class="detail-tabs">
+          <button class="detail-tab active" onclick="switchTab(this,'tab-bio-${id}')">👤 Bio</button>
+          <button class="detail-tab" onclick="switchTab(this,'tab-positions-${id}')">⚖️ Positions</button>
+          <button class="detail-tab" onclick="switchTab(this,'tab-news-${id}')">📰 News</button>
+          <button class="detail-tab" onclick="switchTab(this,'tab-speech-${id}')">🎤 Speech</button>
+        </div>
+
+        <div id="tab-bio-${id}" class="tab-content active">
+          <div style="font-size:0.875rem;line-height:1.6;color:var(--text);">
+            <p style="margin-bottom:12px;"><strong>Background:</strong> ${c.background}</p>
+            <p style="margin-bottom:12px;"><strong>Key Message:</strong> <em>"${c.tagline.replace(/"/g,'')}"</em></p>
+            ${c.controversies ? `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px;"><strong>⚠️ Notable Controversy:</strong><br/><span style="font-size:0.82rem;color:#92400e;">${c.controversies}</span></div>` : ''}
+          </div>
+        </div>
+
+        <div id="tab-positions-${id}" class="tab-content">
+          ${qs.map(q => {
+            const pos = c.positions[q.id];
+            if (pos === undefined) return '';
+            const userVal = (state.answers[q.id] || {}).value || 50;
+            const diff = Math.abs(userVal - pos);
+            const align = diff < 25 ? '✅' : diff < 50 ? '🟡' : '❌';
+            return `<div class="position-item">
+              <div class="position-icon">${align}</div>
+              <div>
+                <div class="position-topic">${q.icon} ${q.topic}</div>
+                <div class="position-stance">${getStanceLabel(q, pos)}</div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+
+        <div id="tab-news-${id}" class="tab-content">
+          ${c.news.map(n => `
+            <div class="news-item">
+              <div class="news-date">${n.date}</div>
+              <div class="news-headline">${n.headline}</div>
+              <div class="news-summary">${n.summary}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div id="tab-speech-${id}" class="tab-content">
+          <div style="background:#f8fafc;border-left:4px solid var(--primary);padding:16px;border-radius:0 10px 10px 0;font-size:0.875rem;font-style:italic;line-height:1.7;color:var(--text);">
+            ${c.speech}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function switchTab(btn, tabId) {
+  const panel = btn.closest('.detail-panel');
+  panel.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function getStanceLabel(q, value) {
+  if (value < 25) return q.left;
+  if (value > 75) return q.right;
+  return 'Moderate / balanced position';
+}
+
+// ═══════════════════════════════════════════
+// RENDER RESULTS
+// ═══════════════════════════════════════════
+function renderResults() {
+  const topMatch = state.matches[0];
+  document.getElementById('result-hero-title').textContent = `Your top match: ${topMatch.candidate.name}`;
+  document.getElementById('result-hero-sub').textContent = `${topMatch.pct}% alignment based on your priorities`;
+
+  // Match bars
+  const matchList = document.getElementById('match-list');
+  matchList.innerHTML = '';
+  const barColors = ['#10b981','#4f46e5','#f59e0b','#ef4444'];
+
+  state.matches.forEach((m, i) => {
+    const c = m.candidate;
+    const item = document.createElement('div');
+    item.className = 'match-item' + (i === 0 ? ' top-match' : '');
+    item.onclick = () => { goToScreen('screen-candidates'); toggleCandidateDetail(c.id); };
+
+    item.innerHTML = `
+      <div class="match-avatar-sm">${c.emoji}</div>
+      <div class="match-info">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+          <div class="match-name">${c.name}</div>
+          ${i === 0 ? '<div class="top-badge">⭐ Top Match</div>' : ''}
+        </div>
+        <div class="match-party-tag ${c.partyClass}">${c.party}</div>
+        <div class="match-bar-wrap" style="padding-right:42px;">
+          <div class="match-bar-bg">
+            <div class="match-bar-fill" style="width:0%;background:${barColors[i]};" data-target="${m.pct}"></div>
+          </div>
+          <div class="match-pct" style="color:${barColors[i]};">${m.pct}%</div>
+        </div>
+      </div>
+    `;
+    matchList.appendChild(item);
+  });
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.match-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 100);
+
+  // Detailed breakdown for top 2
+  const breakdown = document.getElementById('detailed-breakdown');
+  breakdown.innerHTML = '';
+
+  state.matches.slice(0, 2).forEach(m => {
+    const c = m.candidate;
+    const section = document.createElement('div');
+    section.className = 'align-section';
+
+    const agreeHtml = m.alignments.length > 0
+      ? m.alignments.map(a => `<div class="align-row"><div class="align-dot green"></div>${a.topic} — you agree</div>`).join('')
+      : '<div class="align-row" style="color:var(--muted);font-size:0.82rem;">No strong agreements found</div>';
+
+    const disagreeHtml = m.mismatches.length > 0
+      ? m.mismatches.map(a => `<div class="align-row"><div class="align-dot red"></div>${a.topic} — you differ</div>`).join('')
+      : '<div class="align-row" style="color:var(--muted);font-size:0.82rem;">No major disagreements found</div>';
+
+    section.innerHTML = `
+      <div class="align-title">
+        ${c.emoji} ${c.name}
+        <span class="align-tag agree">${m.pct}% match</span>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:4px;">WHERE YOU AGREE</div>
+        ${agreeHtml}
+      </div>
+      <div>
+        <div style="font-size:0.75rem;font-weight:700;color:var(--danger);margin-bottom:4px;">WHERE YOU DIFFER</div>
+        ${disagreeHtml}
+      </div>
+    `;
+    breakdown.appendChild(section);
+  });
+}
+
+// ═══════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════
+function toggleCollapsible(header) {
+  const arrow = header.querySelector('.collapsible-arrow');
+  const body = header.nextElementSibling;
+  arrow.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function restart() {
+  Object.keys(state.profile).forEach(k => delete state.profile[k]);
+  Object.keys(state.answers).forEach(k => delete state.answers[k]);
+  state.candidates = [];
+  state.matches = [];
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('location').value = '';
+  goToScreen('screen-welcome');
+}
+
+// Init step dots
+updateStepDots('screen-welcome');
+</script>
+</body>
+</html>
