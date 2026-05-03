@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(open /Users/lisafaloughi/Desktop/hackathon-claude-mit/index.html)"
+      "Bash(open /Users/lisafaloughi/Desktop/hackathon-claude-mit/index.html)",
+      "Bash(file /Users/lisafaloughi/Desktop/hackathon-claude-mit/assets/*.jpg)"
     ]
   }
 }

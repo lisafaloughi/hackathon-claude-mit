@@ -1,654 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VoteIQ — Your Voice, Your Match</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VoteIQ — Your Voice, Your Match</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#4f46e5;--primary-light:#818cf8;--primary-dark:#3730a3;
+  --accent:#10b981;--danger:#ef4444;--warning:#f59e0b;
+  --bg:#f8fafc;--card:#ffffff;--text:#1e293b;--muted:#64748b;
+  --border:#e2e8f0;--radius:16px;--shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-    :root {
-      --primary: #4f46e5;
-      --primary-light: #818cf8;
-      --primary-dark: #3730a3;
-      --accent: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --radius: 16px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.08);
-    }
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--primary) 0%,#7c3aed 100%);color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(79,70,229,0.3)}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-.5px}.logo span{color:#a5f3fc}
+.step-indicator{display:flex;gap:6px;align-items:center}
+.step-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all .3s}
+.step-dot.active{background:white;transform:scale(1.3)}.step-dot.done{background:var(--accent)}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+/* CONTAINER / SCREENS */
+.container{max-width:720px;margin:0 auto;padding:24px 16px 80px}
+.screen{display:none;animation:fadeIn .4s ease}.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ── HEADER ── */
-    .header {
-      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
-      color: white;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(79,70,229,0.3);
-    }
-    .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-    .logo span { color: #a5f3fc; }
-    .step-indicator { display: flex; gap: 6px; align-items: center; }
-    .step-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: rgba(255,255,255,0.3); transition: all 0.3s;
-    }
-    .step-dot.active { background: white; transform: scale(1.3); }
-    .step-dot.done { background: var(--accent); }
+/* CARD */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 24px;margin-bottom:16px}
+.section-title{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.section-sub{color:var(--muted);font-size:.9rem;margin-bottom:24px;line-height:1.5}
 
-    /* ── MAIN CONTAINER ── */
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px 16px 80px;
-    }
+/* FORM */
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-weight:600;font-size:.875rem;margin-bottom:8px}
+.form-label .optional{color:var(--muted);font-weight:400}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 16px;border:2px solid var(--border);border-radius:100px;cursor:pointer;font-size:.875rem;font-weight:500;transition:all .18s;background:white;color:var(--text);user-select:none}
+.chip:hover{border-color:var(--primary-light);color:var(--primary)}
+.chip.selected{border-color:var(--primary);background:var(--primary);color:white}
+.form-select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-size:.9rem;outline:none;transition:border-color .2s;background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 16px center;-webkit-appearance:none;appearance:none}
+.form-select:focus{border-color:var(--primary)}
 
-    /* ── SCREEN TRANSITIONS ── */
-    .screen { display: none; animation: fadeIn 0.4s ease; }
-    .screen.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:.95rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--primary);color:white;width:100%}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(79,70,229,.35)}
+.btn-secondary{background:var(--border);color:var(--text)}
+.btn-secondary:hover{background:#cbd5e1}
+.btn-accent{background:var(--accent);color:white;width:100%}
+.btn-accent:hover{background:#059669;transform:translateY(-1px)}
+.btn-row{display:flex;gap:12px;margin-top:24px}.btn-row .btn{flex:1}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.875rem;font-weight:600;cursor:pointer;margin-bottom:16px;border:none;background:none;padding:0}
+.back-btn:hover{color:var(--text)}
 
-    /* ── CARD ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 28px 24px;
-      margin-bottom: 16px;
-    }
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px}
+.progress-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.progress-bar{height:6px;background:var(--border);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:100px;transition:width .5s ease}
 
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
-    .section-sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+/* RANGE SLIDERS */
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:100px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--primary);box-shadow:0 2px 8px rgba(79,70,229,.4);cursor:pointer;transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+input[type=range].imp-range::-webkit-slider-thumb{background:var(--imp-color,#94a3b8)}
 
-    /* ── FORM ELEMENTS ── */
-    .form-group { margin-bottom: 20px; }
-    .form-label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.875rem;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-    .form-label .optional { color: var(--muted); font-weight: 400; }
+/* SURVEY QUESTION */
+.slider-question{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:16px;position:relative}
+.q-topic{display:inline-block;background:#eef2ff;color:var(--primary);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:100px;margin-bottom:10px}
+.q-title{font-size:1rem;font-weight:600;margin-bottom:18px;padding-right:90px}
+.learn-more-btn{position:absolute;top:20px;right:16px;background:#f1f5f9;border:none;border-radius:100px;padding:5px 11px;font-size:.75rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.learn-more-btn:hover{background:#e2e8f0;color:var(--text)}
+.slider-wrap{margin-bottom:20px}
+.slider-labels{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.imp-wrap{margin-bottom:12px}
+.imp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.imp-label-text{font-size:.78rem;font-weight:600;color:var(--muted)}
+.imp-level-display{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:100px;background:#f1f5f9;transition:all .2s}
+.imp-ends{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:4px}
+.q-note-input{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:.85rem;outline:none;resize:none;height:58px;transition:border-color .2s;font-family:inherit}
+.q-note-input:focus{border-color:var(--primary)}
 
-    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip {
-      padding: 8px 16px;
-      border: 2px solid var(--border);
-      border-radius: 100px;
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: all 0.18s;
-      background: white;
-      color: var(--text);
-      user-select: none;
-    }
-    .chip:hover { border-color: var(--primary-light); color: var(--primary); }
-    .chip.selected { border-color: var(--primary); background: var(--primary); color: white; }
+/* LOADING */
+.loading-screen{text-align:center;padding:60px 24px}
+.spinner{width:60px;height:60px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 24px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.loading-sub{color:var(--muted);font-size:.9rem}
 
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-      background: white;
-    }
-    .form-input:focus { border-color: var(--primary); }
+/* CANDIDATES GRID */
+.candidates-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px}
+@media(max-width:480px){.candidates-grid{grid-template-columns:1fr}}
+.candidate-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.candidate-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.candidate-card.selected-candidate{border-color:var(--primary)}
+.candidate-avatar-wrap{position:relative}
+.svg-avatar{width:100%;aspect-ratio:1;display:block}
+.candidate-info{padding:14px}
+.candidate-name{font-weight:700;font-size:.95rem;margin-bottom:2px}
+.candidate-party{font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:8px}
+.party-blue{background:#dbeafe;color:#1d4ed8}.party-red{background:#fee2e2;color:#b91c1c}
+.party-green{background:#d1fae5;color:#065f46}.party-orange{background:#ffedd5;color:#c2410c}
+.candidate-tagline{font-size:.8rem;color:var(--muted);line-height:1.4}
+.candidate-match-badge{position:absolute;top:10px;right:10px;background:var(--primary);color:white;font-weight:700;font-size:.85rem;padding:4px 10px;border-radius:100px;box-shadow:0 2px 8px rgba(79,70,229,.4)}
+.candidate-match-badge.top{background:var(--accent)}
 
-    .form-select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-      background: white;
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-    }
-    .form-select:focus { border-color: var(--primary); }
+/* DETAIL PANEL */
+.detail-panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.detail-header{display:flex;align-items:center;gap:16px;padding:20px;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);color:white}
+.detail-avatar{font-size:56px;flex-shrink:0}
+.detail-name{font-size:1.2rem;font-weight:700}
+.detail-role{font-size:.85rem;opacity:.8;margin-top:2px}
+.detail-body{padding:20px}
+.detail-tabs{display:flex;gap:4px;margin-bottom:20px;overflow-x:auto}
+.detail-tab{padding:8px 16px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);border:none;background:transparent;transition:all .15s}
+.detail-tab.active{background:var(--primary);color:white}
+.detail-tab:hover:not(.active){background:var(--border);color:var(--text)}
+.tab-content{display:none}.tab-content.active{display:block}
+.position-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.position-item:last-child{border-bottom:none}
+.news-item{padding:14px 0;border-bottom:1px solid var(--border)}.news-item:last-child{border-bottom:none}
+.news-date{font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.news-headline{font-weight:600;font-size:.875rem;margin-bottom:4px}
+.news-summary{font-size:.8rem;color:var(--muted);line-height:1.4}
 
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      width: 100%;
-    }
-    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(79,70,229,0.35); }
-    .btn-secondary {
-      background: var(--border);
-      color: var(--text);
-    }
-    .btn-secondary:hover { background: #cbd5e1; }
-    .btn-accent {
-      background: var(--accent);
-      color: white;
-      width: 100%;
-    }
-    .btn-accent:hover { background: #059669; transform: translateY(-1px); }
+/* MATCH RESULTS */
+.match-hero{background:linear-gradient(135deg,var(--primary) 0%,#7c3aed 100%);border-radius:var(--radius);padding:28px 24px;color:white;margin-bottom:16px;text-align:center}
+.match-hero-emoji{font-size:3rem;margin-bottom:8px}
+.match-hero-title{font-size:1.3rem;font-weight:700;margin-bottom:4px}
+.match-hero-sub{opacity:.85;font-size:.9rem}
+.match-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.match-item{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.match-item:hover{border-color:var(--primary-light);transform:translateX(3px)}
+.match-item.top-match{border-color:var(--accent)}
+.match-avatar-sm{font-size:2.2rem;flex-shrink:0}
+.match-info{flex:1}
+.match-name{font-weight:700;font-size:.95rem}
+.match-party-tag{font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:100px;display:inline-block;margin-bottom:6px}
+.match-bar-wrap{position:relative;padding-right:44px}
+.match-bar-bg{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
+.match-bar-fill{height:100%;border-radius:100px;transition:width 1s ease}
+.match-pct{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:.8rem;font-weight:700}
+.top-badge{background:var(--accent);color:white;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap}
 
-    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
-    .btn-row .btn { flex: 1; }
+/* MATCH DISTRIBUTION NOTE */
+.dist-note{text-align:center;font-size:.75rem;color:var(--muted);margin-top:-8px;margin-bottom:16px}
 
-    /* ── PROGRESS BAR ── */
-    .progress-wrap { margin-bottom: 24px; }
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    .progress-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      border-radius: 100px;
-      transition: width 0.5s ease;
-    }
+/* EVIDENCE BREAKDOWN */
+.breakdown-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.breakdown-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.breakdown-cand-info{display:flex;align-items:center;gap:10px}
+.breakdown-emoji{font-size:1.8rem}
+.breakdown-name{font-weight:700;font-size:.95rem}
+.breakdown-match{font-size:.8rem;color:var(--muted)}
+.breakdown-toggle{color:var(--muted);font-size:.85rem;transition:transform .2s}
+.breakdown-toggle.open{transform:rotate(180deg)}
+.breakdown-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.breakdown-body.open{max-height:4000px}
+.breakdown-inner{padding:0 20px 20px}
 
-    /* ── SLIDER QUESTION ── */
-    .slider-question {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 16px;
-    }
-    .q-topic {
-      display: inline-block;
-      background: #eef2ff;
-      color: var(--primary);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 100px;
-      margin-bottom: 10px;
-    }
-    .q-title { font-size: 1rem; font-weight: 600; margin-bottom: 18px; }
+.evidence-section{margin-bottom:16px}
+.evidence-section-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:6px 0 10px;display:flex;align-items:center;gap:6px}
+.evidence-section-title.agrees{color:var(--accent)}
+.evidence-section-title.differs{color:var(--danger)}
 
-    .slider-wrap { margin-bottom: 16px; }
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    input[type=range] {
-      width: 100%;
-      -webkit-appearance: none;
-      height: 6px;
-      border-radius: 100px;
-      outline: none;
-      cursor: pointer;
-      background: linear-gradient(to right, var(--primary) 0%, var(--primary) 50%, var(--border) 50%, var(--border) 100%);
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 2px 8px rgba(79,70,229,0.4);
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.evidence-item{border-radius:12px;padding:14px;margin-bottom:10px}
+.evidence-item.agree{background:#f0fdf4;border:1px solid #bbf7d0}
+.evidence-item.disagree{background:#fff1f2;border:1px solid #fecdd3}
+.evidence-item.neutral{background:#f8fafc;border:1px solid var(--border)}
+.evidence-topic{font-size:.8rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.evidence-positions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+@media(max-width:500px){.evidence-positions{grid-template-columns:1fr}}
+.evidence-pos-box{border-radius:8px;padding:8px 10px;font-size:.78rem}
+.evidence-pos-box.user-box{background:#eef2ff;border:1px solid #c7d2fe}
+.evidence-pos-box.cand-box.agree{background:#dcfce7;border:1px solid #86efac}
+.evidence-pos-box.cand-box.disagree{background:#ffe4e6;border:1px solid #fda4af}
+.evidence-pos-label{font-weight:700;font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;color:var(--muted)}
+.evidence-pos-value{font-weight:600;line-height:1.3}
+.evidence-quote{font-size:.78rem;font-style:italic;line-height:1.5;color:#475569;border-left:3px solid var(--border);padding-left:10px}
+.evidence-quote.agree-q{border-left-color:var(--accent)}
+.evidence-quote.disagree-q{border-left-color:var(--danger)}
 
-    .importance-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .importance-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .imp-chip {
-      padding: 5px 12px;
-      border-radius: 100px;
-      border: 1.5px solid var(--border);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      color: var(--muted);
-    }
-    .imp-chip:hover { border-color: var(--primary-light); color: var(--primary); }
-    .imp-chip.sel-low { border-color: #94a3b8; background: #f1f5f9; color: #475569; }
-    .imp-chip.sel-med { border-color: var(--warning); background: #fef3c7; color: #92400e; }
-    .imp-chip.sel-high { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
-    .imp-chip.sel-critical { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+/* IMPACT CARDS */
+.impact-section{margin-bottom:16px}
+.impact-section-title{font-size:.95rem;font-weight:700;padding:12px 20px 0;display:flex;align-items:center;gap:8px}
+.impact-items{padding:12px 20px 20px;display:flex;flex-direction:column;gap:10px}
+.impact-item{border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start}
+.impact-item.positive{background:#f0fdf4;border:1px solid #bbf7d0}
+.impact-item.neutral{background:#fefce8;border:1px solid #fde68a}
+.impact-item.negative{background:#fff1f2;border:1px solid #fecdd3}
+.impact-icon{font-size:1.6rem;flex-shrink:0}
+.impact-body{flex:1}
+.impact-headline{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.impact-headline.positive{color:#065f46}
+.impact-headline.neutral{color:#92400e}
+.impact-headline.negative{color:#9f1239}
+.impact-detail{font-size:.78rem;color:var(--muted);line-height:1.4;margin-bottom:4px}
+.impact-prob{font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:100px;display:inline-block}
+.impact-prob.high{background:#d1fae5;color:#065f46}
+.impact-prob.med{background:#fef3c7;color:#92400e}
+.impact-prob.low{background:#fee2e2;color:#991b1b}
 
-    .q-note-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.85rem;
-      outline: none;
-      resize: none;
-      height: 60px;
-      transition: border-color 0.2s;
-      margin-top: 12px;
-      font-family: inherit;
-    }
-    .q-note-input:focus { border-color: var(--primary); }
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-sheet{background:white;border-radius:20px 20px 0 0;padding:24px 24px 40px;max-width:720px;width:100%;max-height:82vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s ease}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+@media(min-width:600px){
+  .modal-overlay{align-items:center}
+  .modal-sheet{border-radius:20px;max-height:85vh;transform:scale(.95) translateY(0)}
+  .modal-overlay.open .modal-sheet{transform:scale(1)}
+}
+.modal-close{position:absolute;top:16px;right:16px;background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:#e2e8f0}
+.modal-header{margin-bottom:20px}
+.modal-topic-tag{display:inline-block;background:#eef2ff;color:var(--primary);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:100px;margin-bottom:8px}
+.modal-title{font-size:1.2rem;font-weight:700;margin-bottom:6px}
+.modal-definition{font-size:.9rem;color:var(--muted);line-height:1.6}
+.modal-sides{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+@media(max-width:480px){.modal-sides{grid-template-columns:1fr}}
+.modal-side{border-radius:12px;padding:14px}
+.modal-side.left-side{background:#f0f9ff;border:1px solid #bae6fd}
+.modal-side.right-side{background:#f0fdf4;border:1px solid #bbf7d0}
+.modal-side-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.modal-side.left-side .modal-side-label{color:#0369a1}
+.modal-side.right-side .modal-side-label{color:#065f46}
+.modal-side-desc{font-size:.82rem;line-height:1.5;margin-bottom:8px;font-weight:600}
+.modal-side-example{font-size:.78rem;color:var(--muted);line-height:1.4;font-style:italic}
+.modal-situation{background:#fef9ec;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:12px}
+.modal-situation-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:6px}
+.modal-situation-text{font-size:.82rem;line-height:1.5;color:#78350f}
+.modal-stat{background:#f8fafc;border-radius:10px;padding:12px 14px;font-size:.82rem;color:var(--text);display:flex;align-items:center;gap:8px}
+.modal-stat-icon{font-size:1.1rem}
 
-    /* ── LOADING ── */
-    .loading-screen {
-      text-align: center;
-      padding: 60px 24px;
-    }
-    .spinner {
-      width: 60px; height: 60px;
-      border: 4px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin: 0 auto 24px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-    .loading-sub { color: var(--muted); font-size: 0.9rem; }
+/* WELCOME */
+.welcome-hero{text-align:center;padding:40px 24px 32px}
+.welcome-emoji{font-size:4rem;margin-bottom:16px}
+.welcome-title{font-size:2rem;font-weight:800;margin-bottom:12px;line-height:1.2}
+.welcome-title span{color:var(--primary)}
+.welcome-sub{color:var(--muted);font-size:1rem;line-height:1.6;margin-bottom:32px}
+.feature-list{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left}
+.feature-item{display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.feature-icon{font-size:1.4rem;flex-shrink:0}
+.feature-text strong{display:block;font-weight:600;margin-bottom:1px}
+.feature-text span{color:var(--muted);font-size:.82rem}
 
-    /* ── CANDIDATES ── */
-    .candidates-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    @media (max-width: 480px) { .candidates-grid { grid-template-columns: 1fr; } }
+/* DISCLAIMER */
+.disclaimer{background:#fef3c7;border:1px solid #f59e0b;border-radius:12px;padding:16px 18px;margin-top:16px}
+.disclaimer-title{font-weight:700;font-size:.875rem;margin-bottom:6px}
+.disclaimer-text{font-size:.82rem;color:#78350f;line-height:1.5}
 
-    .candidate-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid transparent;
-    }
-    .candidate-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-    .candidate-card.selected-candidate { border-color: var(--primary); }
+/* COLLAPSIBLE */
+.collapsible-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.collapsible-arrow{transition:transform .2s;color:var(--muted)}.collapsible-arrow.open{transform:rotate(180deg)}
+.collapsible-body{overflow:hidden;max-height:0;transition:max-height .3s ease}.collapsible-body.open{max-height:2000px}
 
-    .candidate-avatar {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      display: block;
-    }
-    .candidate-avatar-wrap {
-      position: relative;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .candidate-avatar-img {
-      width: 100%;
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 72px;
-    }
+.context-panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.context-title{font-weight:700;font-size:.95rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.context-stat{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.context-stat:last-child{border-bottom:none}
+.context-stat-icon{font-size:1.1rem}
+.context-stat-label{color:var(--muted);font-size:.78rem}
+.context-stat-val{font-weight:600}
 
-    .candidate-info { padding: 14px; }
-    .candidate-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; }
-    .candidate-party {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 100px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-    .party-blue { background: #dbeafe; color: #1d4ed8; }
-    .party-red { background: #fee2e2; color: #b91c1c; }
-    .party-green { background: #d1fae5; color: #065f46; }
-    .party-orange { background: #ffedd5; color: #c2410c; }
+/* IMAGE AVATARS */
+.cand-img-card{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#f1f5f9}
+.cand-img-detail{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid rgba(255,255,255,0.25)}
+.cand-img-sm{width:46px;height:46px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.cand-img-tiny{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
 
-    .candidate-tagline { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-    .candidate-match-badge {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: var(--primary);
-      color: white;
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 4px 10px;
-      border-radius: 100px;
-      box-shadow: 0 2px 8px rgba(79,70,229,0.4);
-    }
-    .candidate-match-badge.top { background: var(--accent); }
+/* CLICKABLE QUOTE */
+.evidence-quote{cursor:pointer;transition:all .15s;position:relative}
+.evidence-quote:hover{background:rgba(79,70,229,0.04);border-radius:6px}
+.evidence-quote-link{font-size:.7rem;color:var(--primary);font-weight:600;margin-top:6px;display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+.evidence-quote-link:hover{text-decoration:underline}
 
-    /* ── CANDIDATE DETAIL PANEL ── */
-    .detail-panel {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .detail-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 20px;
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-      color: white;
-    }
-    .detail-avatar { font-size: 56px; flex-shrink: 0; }
-    .detail-name { font-size: 1.2rem; font-weight: 700; }
-    .detail-role { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
-    .detail-body { padding: 20px; }
+/* SOURCE MODAL */
+.source-type-badge{display:inline-block;background:#eef2ff;color:var(--primary);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:5px 12px;border-radius:100px;margin-bottom:10px}
+.source-title{font-size:1.15rem;font-weight:700;line-height:1.3;margin-bottom:6px}
+.source-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap}
+.source-meta-item{display:inline-flex;align-items:center;gap:4px}
+.source-context-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+.source-excerpt-box{background:#f8fafc;border-left:4px solid var(--primary);padding:14px 16px;border-radius:0 10px 10px 0;font-size:.88rem;line-height:1.65;color:var(--text);margin-bottom:16px}
+.source-excerpt-box mark{background:#fef08a;color:#713f12;padding:0 2px;border-radius:2px;font-weight:600}
+.source-url-block{background:#f1f5f9;border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.source-url-label{font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.source-url{font-size:.82rem;color:var(--primary);font-family:ui-monospace,SFMono-Regular,monospace;word-break:break-all}
+.source-disclaimer{font-size:.72rem;color:var(--muted);font-style:italic;text-align:center;padding:8px 0}
+.source-cand-bar{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.source-cand-name{font-weight:700;font-size:.9rem}
+.source-cand-role{font-size:.78rem;color:var(--muted)}
 
-    .detail-tabs { display: flex; gap: 4px; margin-bottom: 20px; overflow-x: auto; }
-    .detail-tab {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      color: var(--muted);
-      border: none;
-      background: transparent;
-      transition: all 0.15s;
-    }
-    .detail-tab.active { background: var(--primary); color: white; }
-    .detail-tab:hover:not(.active) { background: var(--border); color: var(--text); }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .position-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .position-item:last-child { border-bottom: none; }
-    .position-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-    .position-topic { font-weight: 600; font-size: 0.875rem; margin-bottom: 2px; }
-    .position-stance { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-
-    .news-item {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .news-item:last-child { border-bottom: none; }
-    .news-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
-    .news-headline { font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; }
-    .news-summary { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-
-    /* ── MATCH RESULTS ── */
-    .match-hero {
-      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
-      border-radius: var(--radius);
-      padding: 28px 24px;
-      color: white;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .match-hero-emoji { font-size: 3rem; margin-bottom: 8px; }
-    .match-hero-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-    .match-hero-sub { opacity: 0.85; font-size: 0.9rem; }
-
-    .match-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-    .match-item {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid transparent;
-    }
-    .match-item:hover { border-color: var(--primary-light); transform: translateX(3px); }
-    .match-item.top-match { border-color: var(--accent); }
-
-    .match-avatar-sm { font-size: 2.2rem; flex-shrink: 0; }
-    .match-info { flex: 1; }
-    .match-name { font-weight: 700; font-size: 0.95rem; }
-    .match-party-tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 100px;
-      display: inline-block;
-      margin-bottom: 6px;
-    }
-    .match-bar-wrap { position: relative; }
-    .match-bar-bg {
-      height: 8px;
-      background: var(--border);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-    .match-bar-fill {
-      height: 100%;
-      border-radius: 100px;
-      transition: width 1s ease;
-    }
-    .match-pct {
-      position: absolute;
-      right: 0; top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .top-badge {
-      background: var(--accent);
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 100px;
-      white-space: nowrap;
-    }
-
-    .align-section {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 12px;
-    }
-    .align-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    .align-tag {
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 100px;
-      font-weight: 600;
-    }
-    .align-tag.agree { background: #d1fae5; color: #065f46; }
-    .align-tag.disagree { background: #fee2e2; color: #991b1b; }
-
-    .align-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 0;
-      font-size: 0.82rem;
-    }
-    .align-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .align-dot.green { background: var(--accent); }
-    .align-dot.red { background: var(--danger); }
-
-    /* ── DISCLAIMER ── */
-    .disclaimer {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-top: 16px;
-    }
-    .disclaimer-title { font-weight: 700; font-size: 0.875rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .disclaimer-text { font-size: 0.82rem; color: #78350f; line-height: 1.5; }
-
-    /* ── WELCOME ── */
-    .welcome-hero {
-      text-align: center;
-      padding: 40px 24px 32px;
-    }
-    .welcome-emoji { font-size: 4rem; margin-bottom: 16px; }
-    .welcome-title { font-size: 2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
-    .welcome-title span { color: var(--primary); }
-    .welcome-sub { color: var(--muted); font-size: 1rem; line-height: 1.6; margin-bottom: 32px; }
-
-    .feature-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; text-align: left; }
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .feature-icon { font-size: 1.4rem; flex-shrink: 0; }
-    .feature-text { font-size: 0.9rem; color: var(--text); }
-    .feature-text strong { display: block; font-weight: 600; margin-bottom: 1px; }
-    .feature-text span { color: var(--muted); font-size: 0.82rem; }
-
-    /* ── FLOATING BACK ── */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--muted);
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 16px;
-      border: none;
-      background: none;
-      padding: 0;
-    }
-    .back-btn:hover { color: var(--text); }
-
-    /* ── SVG Avatars ── */
-    .svg-avatar { width: 100%; aspect-ratio: 1; display: block; }
-
-    /* Tooltip */
-    .tooltip-wrap { position: relative; display: inline-block; }
-    .tooltip-trigger { cursor: help; color: var(--muted); font-size: 0.8rem; }
-    .tooltip-box {
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      color: white;
-      font-size: 0.75rem;
-      padding: 6px 10px;
-      border-radius: 8px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s;
-      z-index: 10;
-    }
-    .tooltip-wrap:hover .tooltip-box { opacity: 1; }
-
-    /* News panel */
-    .context-panel {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-    .context-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .context-stat {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-    .context-stat:last-child { border-bottom: none; }
-    .context-stat-icon { font-size: 1.1rem; }
-    .context-stat-label { color: var(--muted); font-size: 0.78rem; }
-    .context-stat-val { font-weight: 600; }
-
-    .collapsible-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
-    .collapsible-arrow { transition: transform 0.2s; color: var(--muted); }
-    .collapsible-arrow.open { transform: rotate(180deg); }
-    .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
-    .collapsible-body.open { max-height: 1000px; }
-
-    @media (max-width: 600px) {
-      .welcome-title { font-size: 1.6rem; }
-      .card { padding: 20px 16px; }
-    }
-  </style>
+@media(max-width:600px){.welcome-title{font-size:1.6rem}.card{padding:20px 16px}}
+</style>
 </head>
 <body>
 
@@ -664,970 +309,1174 @@
   </div>
 </header>
 
+<!-- LEARN MORE MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- SOURCE / PROOF MODAL -->
+<div class="modal-overlay" id="source-overlay" onclick="closeSourceModal()">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="position:relative">
+    <button class="modal-close" onclick="closeSourceModal()">✕</button>
+    <div id="source-body"></div>
+  </div>
+</div>
+
 <div class="container">
 
-  <!-- ══════════════════════════════════════════
-       SCREEN 0 — WELCOME
-  ══════════════════════════════════════════ -->
-  <div class="screen active" id="screen-welcome">
-    <div class="welcome-hero">
-      <div class="welcome-emoji">🗳️</div>
-      <h1 class="welcome-title">Your Vote.<br/><span>Your Match.</span></h1>
-      <p class="welcome-sub">Understand candidates in minutes. See who aligns with your real-life priorities — no jargon, no pressure.</p>
-    </div>
-    <div class="feature-list">
-      <div class="feature-item">
-        <div class="feature-icon">👤</div>
-        <div class="feature-text">
-          <strong>Tell us about yourself</strong>
-          <span>2 minutes — personal context makes results meaningful</span>
-        </div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">⚖️</div>
-        <div class="feature-text">
-          <strong>Set your priorities</strong>
-          <span>Sliders, not essays — fast and intuitive</span>
-        </div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-text">
-          <strong>See your match</strong>
-          <span>Compare candidates to your actual values</span>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="goToScreen('screen-profile')">Get Started →</button>
-    <div class="disclaimer" style="margin-top:16px;">
-      <div class="disclaimer-title">⚠️ Important</div>
-      <div class="disclaimer-text">This tool does <strong>not</strong> tell you who to vote for. It helps you understand candidates and compare priorities. Candidates and data shown are <strong>synthetic examples</strong> for demonstration purposes.</div>
+<!-- WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-hero">
+    <div class="welcome-emoji">🗳️</div>
+    <h1 class="welcome-title">Your Vote.<br/><span>Your Match.</span></h1>
+    <p class="welcome-sub">Understand candidates in minutes. See who aligns with your real-life priorities — no jargon, no pressure.</p>
+  </div>
+  <div class="feature-list">
+    <div class="feature-item"><div class="feature-icon">👤</div><div class="feature-text"><strong>Tell us about yourself</strong><span>2 minutes — personal context makes results meaningful</span></div></div>
+    <div class="feature-item"><div class="feature-icon">⚖️</div><div class="feature-text"><strong>Set your priorities</strong><span>Sliders, not essays — fast and intuitive</span></div></div>
+    <div class="feature-item"><div class="feature-icon">🎯</div><div class="feature-text"><strong>See your match + real impact</strong><span>Concrete dollars and changes if each candidate wins</span></div></div>
+  </div>
+  <button class="btn btn-primary" onclick="goToScreen('screen-profile')">Get Started →</button>
+  <div class="disclaimer" style="margin-top:16px;">
+    <div class="disclaimer-title">⚠️ Important</div>
+    <div class="disclaimer-text">This tool does <strong>not</strong> tell you who to vote for. All candidates and data are <strong>synthetic examples</strong> for demonstration purposes.</div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="screen-profile">
+  <button class="back-btn" onclick="goToScreen('screen-welcome')">← Back</button>
+  <div class="card">
+    <h2 class="section-title">About You</h2>
+    <p class="section-sub">Helps us ask the right questions and personalise your results. All optional except location.</p>
+    <div class="form-group"><label class="form-label">Age range</label><div class="chip-group" id="age-group"><div class="chip" onclick="selectChip(this,'age')">Under 18</div><div class="chip" onclick="selectChip(this,'age')">18–24</div><div class="chip" onclick="selectChip(this,'age')">25–34</div><div class="chip" onclick="selectChip(this,'age')">35–44</div><div class="chip" onclick="selectChip(this,'age')">45–59</div><div class="chip" onclick="selectChip(this,'age')">60+</div></div></div>
+    <div class="form-group"><label class="form-label">Gender <span class="optional">(optional)</span></label><div class="chip-group" id="gender-group"><div class="chip" onclick="selectChip(this,'gender')">Male</div><div class="chip" onclick="selectChip(this,'gender')">Female</div><div class="chip" onclick="selectChip(this,'gender')">Non-binary</div><div class="chip" onclick="selectChip(this,'gender')">Prefer not to say</div></div></div>
+    <div class="form-group"><label class="form-label">State / Region <span class="optional">*</span></label><select class="form-select" id="location"><option value="">Select your state...</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option><option>— Outside the US —</option></select></div>
+    <div class="form-group"><label class="form-label">Occupation</label><div class="chip-group" id="occupation-group"><div class="chip" onclick="selectChip(this,'occupation')">Student</div><div class="chip" onclick="selectChip(this,'occupation')">Healthcare</div><div class="chip" onclick="selectChip(this,'occupation')">Tech / Engineering</div><div class="chip" onclick="selectChip(this,'occupation')">Education</div><div class="chip" onclick="selectChip(this,'occupation')">Retail / Service</div><div class="chip" onclick="selectChip(this,'occupation')">Business / Finance</div><div class="chip" onclick="selectChip(this,'occupation')">Trades / Construction</div><div class="chip" onclick="selectChip(this,'occupation')">Self-employed</div><div class="chip" onclick="selectChip(this,'occupation')">Unemployed / Job seeker</div><div class="chip" onclick="selectChip(this,'occupation')">Retired</div><div class="chip" onclick="selectChip(this,'occupation')">Other</div></div></div>
+    <div class="form-group"><label class="form-label">Income range <span class="optional">(optional)</span></label><div class="chip-group" id="income-group"><div class="chip" onclick="selectChip(this,'income')">Under $30k</div><div class="chip" onclick="selectChip(this,'income')">$30k–60k</div><div class="chip" onclick="selectChip(this,'income')">$60k–100k</div><div class="chip" onclick="selectChip(this,'income')">$100k–200k</div><div class="chip" onclick="selectChip(this,'income')">Over $200k</div></div></div>
+    <div class="form-group"><label class="form-label">Family size <span class="optional">(optional)</span></label><div class="chip-group" id="family-group"><div class="chip" onclick="selectChip(this,'family')">Just me</div><div class="chip" onclick="selectChip(this,'family')">Me + partner</div><div class="chip" onclick="selectChip(this,'family')">Small family (1–2 kids)</div><div class="chip" onclick="selectChip(this,'family')">Large family (3+ kids)</div><div class="chip" onclick="selectChip(this,'family')">Caring for elderly</div></div></div>
+    <div class="form-group"><label class="form-label">Do you own or rent? <span class="optional">(optional)</span></label><div class="chip-group" id="housing-group"><div class="chip" onclick="selectChip(this,'housing')">Own</div><div class="chip" onclick="selectChip(this,'housing')">Rent</div><div class="chip" onclick="selectChip(this,'housing')">Living with family</div><div class="chip" onclick="selectChip(this,'housing')">Other</div></div></div>
+    <div class="form-group"><label class="form-label">Nationality / Background <span class="optional">(optional)</span></label><div class="chip-group" id="nationality-group"><div class="chip" onclick="selectChip(this,'nationality')">US Born</div><div class="chip" onclick="selectChip(this,'nationality')">Naturalized Citizen</div><div class="chip" onclick="selectChip(this,'nationality')">Permanent Resident</div><div class="chip" onclick="selectChip(this,'nationality')">Visa / Work Permit</div><div class="chip" onclick="selectChip(this,'nationality')">International</div></div></div>
+    <button class="btn btn-primary" onclick="submitProfile()" style="margin-top:8px;">Continue → Set My Priorities</button>
+  </div>
+</div>
+
+<!-- SURVEY -->
+<div class="screen" id="screen-survey">
+  <button class="back-btn" onclick="goToScreen('screen-profile')">← Back</button>
+  <div class="card" style="margin-bottom:16px;">
+    <h2 class="section-title">Your Priorities</h2>
+    <p class="section-sub">Move each slider to show your view. Set how much each topic matters to you. Tap ℹ️ to learn more about any topic.</p>
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="survey-progress-label">Questions</span><span id="survey-progress-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="survey-progress-fill" style="width:0%"></div></div>
     </div>
   </div>
+  <div id="survey-questions"></div>
+  <button class="btn btn-accent" onclick="submitSurvey()">See My Candidate Matches →</button>
+</div>
 
-  <!-- ══════════════════════════════════════════
-       SCREEN 1 — PROFILE
-  ══════════════════════════════════════════ -->
-  <div class="screen" id="screen-profile">
-    <button class="back-btn" onclick="goToScreen('screen-welcome')">← Back</button>
-    <div class="card">
-      <h2 class="section-title">About You</h2>
-      <p class="section-sub">This helps us ask the right questions and give you relevant results. <strong>All optional except location.</strong></p>
+<!-- LOADING -->
+<div class="screen" id="screen-loading">
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Analyzing your priorities...</div>
+    <div class="loading-sub" id="loading-sub">Comparing with candidate positions</div>
+  </div>
+</div>
 
-      <div class="form-group">
-        <label class="form-label">Age range</label>
-        <div class="chip-group" id="age-group">
-          <div class="chip" onclick="selectChip(this,'age')">Under 18</div>
-          <div class="chip" onclick="selectChip(this,'age')">18–24</div>
-          <div class="chip" onclick="selectChip(this,'age')">25–34</div>
-          <div class="chip" onclick="selectChip(this,'age')">35–44</div>
-          <div class="chip" onclick="selectChip(this,'age')">45–59</div>
-          <div class="chip" onclick="selectChip(this,'age')">60+</div>
-        </div>
+<!-- CANDIDATES -->
+<div class="screen" id="screen-candidates">
+  <button class="back-btn" onclick="goToScreen('screen-survey')">← Back</button>
+  <div class="card" style="margin-bottom:16px;">
+    <h2 class="section-title">The Candidates</h2>
+    <p class="section-sub">Tap any candidate to explore their positions, background, and recent news.</p>
+  </div>
+  <div class="candidates-grid" id="candidates-grid"></div>
+  <div id="candidate-detail-area"></div>
+  <button class="btn btn-primary" onclick="goToScreen('screen-results')" style="margin-top:8px;">View My Match Results →</button>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <button class="back-btn" onclick="goToScreen('screen-candidates')">← Back to Candidates</button>
+  <div class="match-hero">
+    <div class="match-hero-emoji">🎯</div>
+    <div class="match-hero-title" id="result-hero-title">Your top match is ready</div>
+    <div class="match-hero-sub" id="result-hero-sub">Based on your priorities and profile</div>
+  </div>
+  <div class="match-list" id="match-list"></div>
+  <div class="dist-note">Each % = share of your total alignment across all 4 candidates (adds to 100%)</div>
+  <div id="detailed-breakdown"></div>
+  <div class="context-panel">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <div class="context-title" style="margin-bottom:0;">📊 Current Political Context</div>
+      <div class="collapsible-arrow">▼</div>
+    </div>
+    <div class="collapsible-body">
+      <div style="padding-top:14px;">
+        <div class="context-stat"><div class="context-stat-icon">📈</div><div style="flex:1;"><div class="context-stat-label">GDP Growth (2024)</div><div class="context-stat-val">+2.4% — moderate expansion</div></div></div>
+        <div class="context-stat"><div class="context-stat-icon">💼</div><div style="flex:1;"><div class="context-stat-label">Unemployment Rate</div><div class="context-stat-val">4.1% — near historic lows</div></div></div>
+        <div class="context-stat"><div class="context-stat-icon">🏥</div><div style="flex:1;"><div class="context-stat-label">Healthcare</div><div class="context-stat-val">30M+ uninsured; debate on expansion ongoing</div></div></div>
+        <div class="context-stat"><div class="context-stat-icon">🌡️</div><div style="flex:1;"><div class="context-stat-label">Climate Policy</div><div class="context-stat-val">Paris Agreement active; IRA investments ongoing</div></div></div>
+        <div class="context-stat"><div class="context-stat-icon">🏫</div><div style="flex:1;"><div class="context-stat-label">Student Debt</div><div class="context-stat-val">~$1.7 trillion outstanding — major policy debate</div></div></div>
+        <div class="context-stat"><div class="context-stat-icon">🛂</div><div style="flex:1;"><div class="context-stat-label">Immigration</div><div class="context-stat-val">Border reform stalled in Congress</div></div></div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Gender <span class="optional">(optional)</span></label>
-        <div class="chip-group" id="gender-group">
-          <div class="chip" onclick="selectChip(this,'gender')">Male</div>
-          <div class="chip" onclick="selectChip(this,'gender')">Female</div>
-          <div class="chip" onclick="selectChip(this,'gender')">Non-binary</div>
-          <div class="chip" onclick="selectChip(this,'gender')">Prefer not to say</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">State / Region <span class="optional">*</span></label>
-        <select class="form-select" id="location">
-          <option value="">Select your state...</option>
-          <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
-          <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
-          <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
-          <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
-          <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
-          <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
-          <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
-          <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
-          <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
-          <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
-          <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
-          <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
-          <option>Wisconsin</option><option>Wyoming</option>
-          <option>— Outside the US —</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Occupation</label>
-        <div class="chip-group" id="occupation-group">
-          <div class="chip" onclick="selectChip(this,'occupation')">Student</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Healthcare</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Tech / Engineering</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Education</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Retail / Service</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Business / Finance</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Trades / Construction</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Self-employed</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Unemployed / Job seeker</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Retired</div>
-          <div class="chip" onclick="selectChip(this,'occupation')">Other</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Income range <span class="optional">(optional)</span></label>
-        <div class="chip-group" id="income-group">
-          <div class="chip" onclick="selectChip(this,'income')">Under $30k</div>
-          <div class="chip" onclick="selectChip(this,'income')">$30k–60k</div>
-          <div class="chip" onclick="selectChip(this,'income')">$60k–100k</div>
-          <div class="chip" onclick="selectChip(this,'income')">$100k–200k</div>
-          <div class="chip" onclick="selectChip(this,'income')">Over $200k</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Family size <span class="optional">(optional)</span></label>
-        <div class="chip-group" id="family-group">
-          <div class="chip" onclick="selectChip(this,'family')">Just me</div>
-          <div class="chip" onclick="selectChip(this,'family')">Me + partner</div>
-          <div class="chip" onclick="selectChip(this,'family')">Small family (1–2 kids)</div>
-          <div class="chip" onclick="selectChip(this,'family')">Large family (3+ kids)</div>
-          <div class="chip" onclick="selectChip(this,'family')">Caring for elderly</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Do you own or rent your home? <span class="optional">(optional)</span></label>
-        <div class="chip-group" id="housing-group">
-          <div class="chip" onclick="selectChip(this,'housing')">Own</div>
-          <div class="chip" onclick="selectChip(this,'housing')">Rent</div>
-          <div class="chip" onclick="selectChip(this,'housing')">Living with family</div>
-          <div class="chip" onclick="selectChip(this,'housing')">Other</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Nationality / Background <span class="optional">(optional)</span></label>
-        <div class="chip-group" id="nationality-group">
-          <div class="chip" onclick="selectChip(this,'nationality')">US Born</div>
-          <div class="chip" onclick="selectChip(this,'nationality')">Naturalized Citizen</div>
-          <div class="chip" onclick="selectChip(this,'nationality')">Permanent Resident</div>
-          <div class="chip" onclick="selectChip(this,'nationality')">Visa / Work Permit</div>
-          <div class="chip" onclick="selectChip(this,'nationality')">International</div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary" onclick="submitProfile()" style="margin-top:8px;">Continue → Set My Priorities</button>
     </div>
   </div>
-
-  <!-- ══════════════════════════════════════════
-       SCREEN 2 — SURVEY
-  ══════════════════════════════════════════ -->
-  <div class="screen" id="screen-survey">
-    <button class="back-btn" onclick="goToScreen('screen-profile')">← Back</button>
-    <div class="card" style="margin-bottom:16px;">
-      <h2 class="section-title">Your Priorities</h2>
-      <p class="section-sub">Move each slider to show your view. Set the importance of each topic. There are no right or wrong answers.</p>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span id="survey-progress-label">Question 1 of 12</span>
-          <span id="survey-progress-pct">0%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="survey-progress-fill" style="width:0%"></div></div>
-      </div>
-    </div>
-    <div id="survey-questions"></div>
-    <div id="survey-personalized"></div>
-    <button class="btn btn-accent" onclick="submitSurvey()">See My Candidate Matches →</button>
+  <div class="disclaimer">
+    <div class="disclaimer-title">⚠️ A note from VoteIQ</div>
+    <div class="disclaimer-text"><strong>We do not tell you who to vote for.</strong><br/>This tool helps you understand candidates and see how policies may affect your life. Match scores and impact estimates are based on synthetic candidate data created for this demo. Always research real candidates before voting.</div>
   </div>
-
-  <!-- ══════════════════════════════════════════
-       SCREEN 3 — LOADING
-  ══════════════════════════════════════════ -->
-  <div class="screen" id="screen-loading">
-    <div class="loading-screen">
-      <div class="spinner"></div>
-      <div class="loading-text" id="loading-text">Analyzing your priorities...</div>
-      <div class="loading-sub" id="loading-sub">Comparing with candidate positions</div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       SCREEN 4 — CANDIDATES
-  ══════════════════════════════════════════ -->
-  <div class="screen" id="screen-candidates">
-    <button class="back-btn" onclick="goToScreen('screen-survey')">← Back</button>
-    <div class="card" style="margin-bottom:0;">
-      <h2 class="section-title">The Candidates</h2>
-      <p class="section-sub">Click any candidate to learn more — their positions, background, and recent news.</p>
-    </div>
-    <div class="candidates-grid" id="candidates-grid"></div>
-    <div id="candidate-detail-area"></div>
-    <button class="btn btn-primary" onclick="goToScreen('screen-results')" style="margin-top:8px;">View My Match Results →</button>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       SCREEN 5 — RESULTS
-  ══════════════════════════════════════════ -->
-  <div class="screen" id="screen-results">
-    <button class="back-btn" onclick="goToScreen('screen-candidates')">← Back to Candidates</button>
-
-    <div class="match-hero">
-      <div class="match-hero-emoji">🎯</div>
-      <div class="match-hero-title" id="result-hero-title">Your top match is ready</div>
-      <div class="match-hero-sub" id="result-hero-sub">Based on your priorities and profile</div>
-    </div>
-
-    <div class="match-list" id="match-list"></div>
-
-    <div id="detailed-breakdown"></div>
-
-    <div class="context-panel" style="margin-top:8px;">
-      <div class="collapsible-header" onclick="toggleCollapsible(this)">
-        <div class="context-title" style="margin-bottom:0;">📊 Current Political Context</div>
-        <div class="collapsible-arrow">▼</div>
-      </div>
-      <div class="collapsible-body">
-        <div style="padding-top:14px;">
-          <div class="context-stat">
-            <div class="context-stat-icon">📈</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">GDP Growth (2024)</div>
-              <div class="context-stat-val">+2.4% — moderate expansion</div>
-            </div>
-          </div>
-          <div class="context-stat">
-            <div class="context-stat-icon">💼</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">Unemployment Rate</div>
-              <div class="context-stat-val">4.1% — near historic lows</div>
-            </div>
-          </div>
-          <div class="context-stat">
-            <div class="context-stat-icon">🏥</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">Healthcare</div>
-              <div class="context-stat-val">30M+ uninsured, debate on expansion</div>
-            </div>
-          </div>
-          <div class="context-stat">
-            <div class="context-stat-icon">🌡️</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">Climate Policy</div>
-              <div class="context-stat-val">Paris Agreement active, IRA investments ongoing</div>
-            </div>
-          </div>
-          <div class="context-stat">
-            <div class="context-stat-icon">🏫</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">Student Debt</div>
-              <div class="context-stat-val">~$1.7 trillion outstanding — major policy debate</div>
-            </div>
-          </div>
-          <div class="context-stat">
-            <div class="context-stat-icon">🛂</div>
-            <div style="flex:1;">
-              <div class="context-stat-label">Immigration</div>
-              <div class="context-stat-val">Border crossings at record levels, reform stalled in Congress</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="disclaimer">
-      <div class="disclaimer-title">⚠️ A note from VoteIQ</div>
-      <div class="disclaimer-text">
-        <strong>We do not tell you who to vote for.</strong><br/>
-        This tool is designed to help you understand candidates, compare priorities, and see how policies may affect you. Match scores are based on your stated preferences and <em>synthetic</em> candidate data created for this demo. Always research real candidates before voting.
-      </div>
-    </div>
-
-    <button class="btn btn-secondary" onclick="restart()" style="margin-top:16px; width:100%;">↩ Start Over</button>
-  </div>
+  <button class="btn btn-secondary" onclick="restart()" style="margin-top:16px;width:100%;">↩ Start Over</button>
+</div>
 
 </div><!-- /container -->
 
 <script>
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════
-const state = {
-  profile: {},
-  answers: {},  // questionId -> { value: 0-100, importance: 'low'|'med'|'high'|'critical' }
-  candidates: [],
-  matches: []
+// ═══════════════════════════════════════════════════════
+const state = { profile:{}, answers:{}, candidates:[], matches:[], surveyQuestions:[] };
+
+// ═══════════════════════════════════════════════════════
+// LEARN-MORE DATA
+// ═══════════════════════════════════════════════════════
+const TOPIC_DETAILS = {
+  economy:{
+    icon:'💰', topic:'Economy',
+    title:'Government Role in the Economy',
+    definition:'How much should government intervene in markets — setting wages, regulating businesses, and directing national investment?',
+    left:{label:'Free Market',desc:'Minimal regulation, lower business taxes. Competition and innovation drive economic growth without government picking winners.',example:'Example: Airline deregulation (1978) lowered fares through competition. Supporters argue cutting red tape creates jobs.'},
+    right:{label:'Government-Led',desc:'Regulations protect workers and the environment; public investment fills gaps the private sector won\'t.',example:'Example: New Deal (1930s) public works programs. European social democracies have strong labor regulations and higher wages.'},
+    situation:'The US has a mixed economy. Key current debates: antitrust enforcement on big tech, pharmaceutical price caps, and whether to revive industrial policy to compete with China.',
+    stat:'📊 The US federal government spends about 38% of GDP — slightly below the OECD average of 41%.'
+  },
+  taxes:{
+    icon:'📊', topic:'Taxes',
+    title:'Tax Policy & Who Pays',
+    definition:'How should the government raise revenue — and should higher earners pay proportionally more?',
+    left:{label:'Lower & Flatter Taxes',desc:'Cutting taxes for businesses and individuals leaves more money in private hands, spurring investment and growth.',example:'Example: The 2017 Tax Cuts and Jobs Act cut corporate tax from 35% to 21%. GDP growth briefly accelerated.'},
+    right:{label:'Progressive Taxation',desc:'Higher earners pay higher rates; revenue funds healthcare, education, infrastructure. Reduces wealth inequality.',example:'Example: Top income tax rates were over 90% in the 1950s. Denmark taxes at 46% of GDP but has free university and healthcare.'},
+    situation:'The US top federal income tax rate is 37% (above $578k). The 2017 tax cuts expire in 2025, making tax policy a central election issue.',
+    stat:'📊 The wealthiest 1% earn 22% of US income and pay about 42% of federal income taxes.'
+  },
+  healthcare:{
+    icon:'🏥', topic:'Healthcare',
+    title:'Healthcare System',
+    definition:'Should healthcare be provided through private insurance, public programs, or a combination of both?',
+    left:{label:'Private / Market-Based',desc:'Competition between insurers and providers keeps costs down and gives patients choice. Government programs for the very poor only.',example:'Example: Switzerland uses regulated private insurance with subsidies. Short wait times, high quality, consumer choice.'},
+    right:{label:'Universal Public Coverage',desc:'Government provides or guarantees coverage for all citizens, funded by taxes. No one goes bankrupt from illness.',example:'Example: Canada\'s Medicare: universal, single-payer. UK\'s NHS: government-owned hospitals. Germany: mandatory public option.'},
+    situation:'The US spends $4.5T/year on healthcare (18% of GDP) — highest in the world — yet 30+ million remain uninsured. The ACA (Obamacare) reduced uninsured rates but remains politically contested.',
+    stat:'📊 A hospital visit averages $5,220 in the US vs $1,650 in Germany.'
+  },
+  immigration:{
+    icon:'🛂', topic:'Immigration',
+    title:'Immigration Policy',
+    definition:'How many immigrants should enter the US, under what conditions, and what to do about the 11 million undocumented people already here?',
+    left:{label:'Stricter Enforcement',desc:'Secure the border, reduce illegal crossings, prioritize high-skill legal immigration. Enforce existing laws first.',example:'Example: The 2019 "Remain in Mexico" policy required asylum seekers to wait outside the US. Supporters say it deterred false claims.'},
+    right:{label:'More Open Pathways',desc:'Expand legal pathways, process asylum claims faster, provide a path to citizenship for long-term residents.',example:'Example: Reagan\'s 1986 amnesty legalized ~3M undocumented immigrants. Many economists argue immigration boosts GDP.'},
+    situation:'Border crossings hit a record 2.5M in 2023. About 11M undocumented people live in the US. H-1B tech visa backlog stretches years. Congress has not passed major immigration reform since 1986.',
+    stat:'📊 Immigrants founded 45% of Fortune 500 companies. They also represent 17% of the US workforce.'
+  },
+  climate:{
+    icon:'🌿', topic:'Climate & Energy',
+    title:'Climate & Energy Policy',
+    definition:'How aggressively should the US transition away from fossil fuels to address climate change?',
+    left:{label:'Energy Independence',desc:'Prioritize domestic oil, gas, and coal production. Energy security and low prices come first. Market will drive innovation.',example:'Example: US became world\'s largest oil producer under recent policies. Low energy costs benefit manufacturing and consumers.'},
+    right:{label:'Green Transition',desc:'Rapid shift to wind, solar, EVs. Government investment and carbon pricing accelerate the transition before climate tipping points.',example:'Example: The 2022 Inflation Reduction Act invested $370B in clean energy — fastest US climate action ever.'},
+    situation:'2024 was the hottest year ever recorded. The US is simultaneously the world\'s largest oil producer AND one of the top emitters. Clean energy jobs now outnumber fossil fuel jobs 3 to 1.',
+    stat:'📊 Solar and wind are now the cheapest electricity sources ever built, per IEA 2024.'
+  },
+  guns:{
+    icon:'🔫', topic:'Gun Policy',
+    title:'Gun Rights & Public Safety',
+    definition:'How should the US balance Second Amendment rights with reducing gun violence?',
+    left:{label:'Protect Gun Rights',desc:'The Second Amendment is a fundamental right. Law-abiding owners are not the problem — focus on mental health and crime enforcement instead.',example:'Example: Constitutional carry laws in 27 states allow carrying without a permit. Supporters argue armed citizens deter crime.'},
+    right:{label:'Stricter Gun Laws',desc:'Background check loopholes, assault weapon accessibility, and easy access cause preventable deaths. Common-sense limits are constitutional.',example:'Example: Australia\'s 1996 buyback after a mass shooting. Gun deaths dropped 59%. Canada requires safety courses and waiting periods.'},
+    situation:'The US has 120 guns per 100 people — the highest rate in the world. About 45,000 Americans die from gun violence yearly. The Supreme Court has recently expanded gun rights.',
+    stat:'📊 66% of Americans support stricter gun laws (Gallup 2024). Universal background checks poll at 90% support.'
+  },
+  education:{
+    icon:'🏫', topic:'Education',
+    title:'Education Funding & Control',
+    definition:'Who should control and fund K-12 and higher education — the federal government, states, or parents?',
+    left:{label:'Local / School Choice',desc:'Parents and local communities know best. Vouchers let families choose private or charter schools. Less federal control.',example:'Example: Arizona\'s universal ESA voucher program lets families use public funds at any school. Supporters say competition raises quality.'},
+    right:{label:'Strong Public Schools',desc:'Federal investment ensures equity across zip codes. Universal pre-K, teacher pay, and banning public money going to private schools.',example:'Example: Finland\'s fully public school system ranks #1 globally. High teacher pay and no private school subsidies.'},
+    situation:'US school funding is tied to local property taxes, creating huge inequality between rich and poor districts. 50M students attend public schools. The school choice movement has expanded rapidly since 2020.',
+    stat:'📊 The US spends $15,600/student/year — among the highest globally — yet ranks 13th in reading and 28th in math internationally.'
+  },
+  social:{
+    icon:'🏳️‍🌈', topic:'Social Issues',
+    title:'Civil & Social Rights Policy',
+    definition:'How actively should the federal government protect civil rights, reproductive rights, and LGBTQ+ equality?',
+    left:{label:'Traditional Values / States\' Rights',desc:'Social issues are deeply personal and moral. Leave them to states and communities rather than imposing federal standards.',example:'Example: After Dobbs, abortion regulation returned to states. Some argue this reflects democratic diversity.'},
+    right:{label:'Expand Federal Protections',desc:'Federal law must protect everyone equally. Reproductive rights, LGBTQ+ protections, and voting rights require national standards.',example:'Example: The Civil Rights Act (1964) overrode state laws to guarantee equality. Marriage Equality Act (2022) federalized same-sex marriage.'},
+    situation:'Post-Dobbs (2022), abortion access varies dramatically by state. LGBTQ+ rights expanding in some states, restricted in others. Voting rights legislation stalled in Congress.',
+    stat:'📊 71% of Americans support same-sex marriage. 61% believe abortion should be legal in most or all cases (Gallup 2024).'
+  },
+  housing:{
+    icon:'🏠', topic:'Housing',
+    title:'Housing Affordability',
+    definition:'Should the government control housing prices and rents, or leave it to the market?',
+    left:{label:'Free Market Housing',desc:'Government price controls reduce housing supply by discouraging developers. Build more homes to lower prices through supply.',example:'Example: Tokyo\'s permissive zoning allows constant building — one of the few global cities where rents haven\'t skyrocketed.'},
+    right:{label:'Rent Control & Subsidies',desc:'Tenants need protection from sudden rent spikes. Public investment in affordable housing fills gaps the market ignores.',example:'Example: Vienna (Austria) has 60% social housing; average rent is €7/sqm vs €25+ in London. Strong tenant protections.'},
+    situation:'US median home price hit $420,000 in 2024. Rents rose 30%+ since 2020. Homelessness is at record highs. Building permits are near historic lows despite demand.',
+    stat:'📊 The average renter now spends 33% of income on housing — above the 30% "affordability threshold."'
+  },
+  spending:{
+    icon:'🏛️', topic:'Gov. Spending',
+    title:'Government Spending & the Deficit',
+    definition:'Should the federal government spend more to invest in people and infrastructure, or cut spending to reduce the national debt?',
+    left:{label:'Cut Spending / Reduce Debt',desc:'The $34T national debt is a crisis. Government must live within its means. Cut waste, reform entitlements, shrink government.',example:'Example: Canada eliminated its deficit in the 1990s by cutting spending 20%. Bond yields fell; economy grew.'},
+    right:{label:'Invest in Social Programs',desc:'Government investment in education, healthcare, and safety nets pays long-term dividends. Austerity hurts the vulnerable.',example:'Example: Post-WWII US invested heavily in education (GI Bill) and infrastructure. GDP grew 4%+/year for two decades.'},
+    situation:'The US national debt is $34 trillion (127% of GDP). Annual deficit is ~$1.9T. Social Security and Medicare represent 40% of federal spending and are the main driver of long-term debt.',
+    stat:'📊 The US spends 18.7% of GDP on social programs vs the OECD average of 21%.'
+  },
+  student_loans:{
+    icon:'🎓', topic:'Student Loans',
+    title:'Student Loan Debt Relief',
+    definition:'Should the government cancel or reduce student debt, and should public college be free?',
+    left:{label:'No Government Relief',desc:'Cancellation is unfair to those who paid their loans or didn\'t attend college. Personal responsibility applies.',example:'Example: Critics argue cancellation is a transfer to relatively wealthy college graduates at taxpayer expense.'},
+    right:{label:'Cancel / Reduce Debt',desc:'Student debt is an economic crisis holding back a generation. Mass cancellation stimulates the economy and corrects predatory lending.',example:'Example: Biden partially canceled $10–20k for many borrowers in 2022-2024. Advocates call for full cancellation.'},
+    situation:'Total US student debt is $1.7 trillion. Average borrower owes $37,338. Monthly payments resumed in 2023 after pandemic pause. Courts have blocked several cancellation attempts.',
+    stat:'📊 Student debt affects 45 million Americans. Monthly payments average $503.'
+  },
+  min_wage:{
+    icon:'💵', topic:'Minimum Wage',
+    title:'Federal Minimum Wage',
+    definition:'Should the federal minimum wage be raised significantly, or left to states and the market?',
+    left:{label:'Keep or Lower',desc:'Minimum wage mandates kill jobs, especially for young and low-skill workers. Let regions set their own rates.',example:'Example: Economists debate: some Seattle studies showed job losses after minimum wage hike; others showed no effect.'},
+    right:{label:'Raise to $20+',desc:'The federal minimum ($7.25) hasn\'t risen since 2009. A living wage is needed to keep up with inflation and housing costs.',example:'Example: California raised its minimum to $20/hr (2024). Fast food employment held steady despite predictions.'},
+    situation:'The federal minimum wage is $7.25/hr — unchanged since 2009. 30 states have higher minimums. Living wage estimates range from $17–$24/hr depending on city.',
+    stat:'📊 If the 1968 minimum wage had kept pace with productivity growth, it would be $24/hr today.'
+  },
+  rent_control:{
+    icon:'🏘️', topic:'Rent & Housing',
+    title:'Rent Control Policies',
+    definition:'Should the government limit how much landlords can raise rent each year?',
+    left:{label:'Against Rent Control',desc:'Economic consensus: rent control reduces housing supply as landlords sell or convert units. Creates scarcity for newcomers.',example:'Example: San Francisco has some of the strongest rent control AND the highest rents — critics say control fueled scarcity.'},
+    right:{label:'Strong Rent Control',desc:'Tenants deserve stability. Without caps, rapid gentrification forces out long-term residents from their communities.',example:'Example: Oregon enacted statewide rent control in 2019, capping increases at 7%+CPI. Landlord evictions must show cause.'},
+    situation:'US rents rose 26% from 2020–2024. Median rent in major cities exceeds $2,000/mo. About 36% of Americans rent their homes.',
+    stat:'📊 A minimum wage worker must work 79 hours/week to afford a one-bedroom apartment in most US cities (NLIHC 2024).'
+  },
+  social_security:{
+    icon:'👴', topic:'Social Security',
+    title:'Social Security & Medicare',
+    definition:'Should Social Security and Medicare be protected, expanded, or reformed to ensure long-term solvency?',
+    left:{label:'Reform / Partial Privatize',desc:'The programs are mathematically unsustainable. Raise retirement age, introduce personal accounts, and means-test benefits.',example:'Example: Sweden partially privatized pensions in 1998 — individuals invest a portion in market accounts.'},
+    right:{label:'Expand & Protect',desc:'Social Security and Medicare are earned benefits paid into over a lifetime. Protect them fully; raise the payroll tax cap on the wealthy.',example:'Example: Social Security lifted 22 million Americans out of poverty in 2023. Medicare covers 65M+ Americans.'},
+    situation:'Social Security Trust Fund is projected to be depleted by 2033 without action, triggering automatic 23% benefit cuts. Medicare faces similar long-term funding pressures.',
+    stat:'📊 Social Security is the primary income source for 40% of retirees. Average monthly benefit: $1,907.'
+  },
+  corp_tax:{
+    icon:'🏢', topic:'Corporate Tax',
+    title:'Corporate Tax Rates',
+    definition:'Should corporations pay higher or lower taxes?',
+    left:{label:'Lower Corporate Taxes',desc:'Competitive low rates attract business, investment, and jobs. Corporations pass savings to workers and consumers.',example:'Example: Ireland\'s 12.5% corporate rate attracted Apple, Google HQs and created a tech boom.'},
+    right:{label:'Raise Corporate Taxes',desc:'Corporations benefit enormously from public infrastructure, education, and stability. They should pay more to fund public services.',example:'Example: US corporate rate was 35% pre-2017. Biden proposed raising it back to 28%. The current 21% raises less revenue for public investment.'},
+    situation:'US corporate tax rate is 21% since 2017 (cut from 35%). Corporate profits are at record highs. The OECD enacted a 15% global minimum tax in 2024.',
+    stat:'📊 In 1952, corporate taxes were 33% of federal revenue. Today: 9%.'
+  }
 };
 
-// ═══════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════
-function goToScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  updateStepDots(id);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateStepDots(screenId) {
-  const map = {
-    'screen-welcome': 0,
-    'screen-profile': 1,
-    'screen-survey': 2,
-    'screen-loading': 3,
-    'screen-candidates': 4,
-    'screen-results': 5
-  };
-  const current = map[screenId] || 0;
-  document.querySelectorAll('.step-dot').forEach((dot, i) => {
-    dot.classList.remove('active','done');
-    const step = parseInt(dot.dataset.step);
-    if (step < current) dot.classList.add('done');
-    else if (step === current) dot.classList.add('active');
-  });
-}
-
-// ═══════════════════════════════════════════
-// PROFILE
-// ═══════════════════════════════════════════
-function selectChip(el, group) {
-  const parent = el.closest('.chip-group');
-  parent.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.profile[group] = el.textContent.trim();
-}
-
-function submitProfile() {
-  state.profile.location = document.getElementById('location').value;
-  buildSurvey();
-  goToScreen('screen-survey');
-}
-
-// ═══════════════════════════════════════════
-// SURVEY BUILDER
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════════════
 const BASE_QUESTIONS = [
-  { id:'economy', topic:'Economy', icon:'💰', title:'Government role in the economy',
-    left:'Less regulation, free market', right:'More regulation, public investment' },
-  { id:'taxes', topic:'Taxes', icon:'📊', title:'Tax policy',
-    left:'Lower taxes for everyone', right:'Higher taxes on wealthy & corporations' },
-  { id:'healthcare', topic:'Healthcare', icon:'🏥', title:'Healthcare system',
-    left:'Private / market-based healthcare', right:'Universal public healthcare' },
-  { id:'immigration', topic:'Immigration', icon:'🛂', title:'Immigration policy',
-    left:'Stricter limits & enforcement', right:'More open pathways & amnesty' },
-  { id:'climate', topic:'Climate', icon:'🌿', title:'Climate & energy policy',
-    left:'Energy independence, fossil fuels', right:'Green transition, net-zero targets' },
-  { id:'guns', topic:'Gun Policy', icon:'🔫', title:'Gun rights & restrictions',
-    left:'Protect 2nd Amendment broadly', right:'Stricter gun control laws' },
-  { id:'education', topic:'Education', icon:'🏫', title:'Education funding & control',
-    left:'Local/private control, school choice', right:'Federal funding, public schools' },
-  { id:'social', topic:'Social Issues', icon:'🏳️‍🌈', title:'Social & civil rights policy',
-    left:'Traditional values, less federal intervention', right:'Expand rights & protections' },
-  { id:'housing', topic:'Housing', icon:'🏠', title:'Housing affordability',
-    left:'Let the market set prices', right:'Government rent control & subsidies' },
-  { id:'spending', topic:'Spending', icon:'🏛️', title:'Government spending',
-    left:'Cut spending, reduce deficit', right:'Invest more in social programs' },
+  {id:'economy',topic:'Economy',icon:'💰',title:'Government role in the economy',left:'Less regulation, free market',leftShort:'Free market',right:'More regulation, public investment',rightShort:'Gov. intervention'},
+  {id:'taxes',topic:'Taxes',icon:'📊',title:'Tax policy: who should pay more?',left:'Lower taxes for everyone',leftShort:'Cut taxes',right:'Higher taxes on wealthy & corporations',rightShort:'Tax the rich'},
+  {id:'healthcare',topic:'Healthcare',icon:'🏥',title:'Healthcare system',left:'Private / market-based insurance',leftShort:'Private insurance',right:'Universal public healthcare',rightShort:'Universal coverage'},
+  {id:'immigration',topic:'Immigration',icon:'🛂',title:'Immigration policy',left:'Stricter limits & enforcement',leftShort:'Restrict immigration',right:'More open pathways & citizenship',rightShort:'Open pathways'},
+  {id:'climate',topic:'Climate',icon:'🌿',title:'Climate & energy policy',left:'Energy independence, fossil fuels',leftShort:'Fossil fuel focus',right:'Green transition, net-zero targets',rightShort:'Green transition'},
+  {id:'guns',topic:'Gun Policy',icon:'🔫',title:'Gun rights & public safety',left:'Protect 2nd Amendment broadly',leftShort:'Protect gun rights',right:'Stricter background checks & limits',rightShort:'Stricter gun laws'},
+  {id:'education',topic:'Education',icon:'🏫',title:'Education funding & control',left:'School choice, local/private control',leftShort:'School choice',right:'Federal funding, strong public schools',rightShort:'Public school investment'},
+  {id:'social',topic:'Social Issues',icon:'🏳️‍🌈',title:'Civil & social rights policy',left:'Traditional values, states\' rights',leftShort:'States\' rights',right:'Federal protection of civil rights',rightShort:'Federal protections'},
+  {id:'housing',topic:'Housing',icon:'🏠',title:'Housing affordability',left:'Let the market set prices',leftShort:'Free market housing',right:'Rent control & affordable housing subsidies',rightShort:'Rent control'},
+  {id:'spending',topic:'Gov. Spending',icon:'🏛️',title:'Government spending & the deficit',left:'Cut spending, reduce national debt',leftShort:'Cut spending',right:'Invest more in social programs',rightShort:'More social investment'},
 ];
 
 const PERSONALIZED_QUESTIONS = {
-  Student: [
-    { id:'student_loans', topic:'Student Loans', icon:'🎓', title:'Student loan policy',
-      left:'No government forgiveness', right:'Cancel / reduce student debt' },
-    { id:'college_cost', topic:'College Access', icon:'📚', title:'College affordability',
-      left:'Keep private tuition market', right:'Make public college free' },
+  Student:[
+    {id:'student_loans',topic:'Student Loans',icon:'🎓',title:'Student loan debt relief',left:'No government forgiveness',leftShort:'No cancellation',right:'Cancel or significantly reduce student debt',rightShort:'Debt cancellation'},
   ],
-  Healthcare: [
-    { id:'nurse_staffing', topic:'Healthcare Workers', icon:'👩‍⚕️', title:'Hospital staffing regulations',
-      left:'Leave to hospitals to decide', right:'Mandate nurse-to-patient ratios' },
+  'Retail / Service':[
+    {id:'min_wage',topic:'Minimum Wage',icon:'💵',title:'Federal minimum wage policy',left:'Keep current or leave to states',leftShort:'Keep as is',right:'Raise significantly (e.g. $20+/hr)',rightShort:'Raise to $20+'},
   ],
-  'Retail / Service': [
-    { id:'min_wage', topic:'Minimum Wage', icon:'💵', title:'Federal minimum wage',
-      left:'Keep current or lower', right:'Raise significantly (e.g. $20+)' },
+  'Trades / Construction':[
+    {id:'min_wage',topic:'Minimum Wage',icon:'💵',title:'Federal minimum wage policy',left:'Keep current or leave to states',leftShort:'Keep as is',right:'Raise significantly (e.g. $20+/hr)',rightShort:'Raise to $20+'},
   ],
-  Retired: [
-    { id:'social_security', topic:'Social Security', icon:'👴', title:'Social Security & Medicare',
-      left:'Reform / privatize for sustainability', right:'Expand and protect benefits' },
+  Retired:[
+    {id:'social_security',topic:'Social Security',icon:'👴',title:'Social Security & Medicare benefits',left:'Reform / partial privatization for sustainability',leftShort:'Reform SS',right:'Expand and fully protect benefits',rightShort:'Protect & expand'},
   ],
-  'Business / Finance': [
-    { id:'corp_tax', topic:'Corporate Tax', icon:'🏢', title:'Corporate tax rates',
-      left:'Lower to stimulate growth', right:'Raise to fund public services' },
+  'Business / Finance':[
+    {id:'corp_tax',topic:'Corporate Tax',icon:'🏢',title:'Corporate tax rates',left:'Lower to stimulate growth',leftShort:'Lower rates',right:'Raise to fund public services',rightShort:'Raise rates'},
   ],
-  'Trades / Construction': [
-    { id:'infrastructure', topic:'Infrastructure', icon:'🏗️', title:'Infrastructure investment',
-      left:'Private-sector led projects', right:'Large public works programs' },
-    { id:'unions', topic:'Labor Rights', icon:'👷', title:'Union power & labor rights',
-      left:'Less union regulation', right:'Strengthen unions & worker protections' },
-  ],
-  'Self-employed': [
-    { id:'self_employ_tax', topic:'Self-Employment', icon:'💼', title:'Self-employment tax burden',
-      left:'Reduce taxes for small businesses', right:'Expand social safety net coverage' },
+  'Unemployed / Job seeker':[
+    {id:'min_wage',topic:'Minimum Wage',icon:'💵',title:'Federal minimum wage',left:'Keep current or lower',leftShort:'Keep as is',right:'Raise significantly',rightShort:'Raise to $20+'},
   ],
 };
 
 const HOUSING_QUESTIONS = {
-  Rent: [
-    { id:'rent_control', topic:'Rent & Housing', icon:'🏘️', title:'Rent control policies',
-      left:'Against rent control', right:'Strong rent control laws' },
-  ],
-  Own: [
-    { id:'property_tax', topic:'Property Tax', icon:'🏡', title:'Property tax policy',
-      left:'Reduce property taxes', right:'Use property taxes to fund schools' },
-  ],
+  Rent:[{id:'rent_control',topic:'Rent & Housing',icon:'🏘️',title:'Rent control & tenant protections',left:'Against rent control — build more supply',leftShort:'No rent control',right:'Strong rent stabilization laws',rightShort:'Rent control'}],
 };
 
-const IMMIGRATION_QUESTIONS = {
-  'Naturalized Citizen': [
-    { id:'path_citizenship', topic:'Immigration Path', icon:'🗽', title:'Path to citizenship',
-      left:'Strict requirements only', right:'Easier / faster pathways' },
-  ],
-  'Permanent Resident': [
-    { id:'path_citizenship', topic:'Immigration Path', icon:'🗽', title:'Path to citizenship',
-      left:'Strict requirements only', right:'Easier / faster pathways' },
-  ],
-  'Visa / Work Permit': [
-    { id:'visa_reform', topic:'Visa System', icon:'✈️', title:'Work visa & immigration reform',
-      left:'Keep current system', right:'Major reform / expansion' },
-  ],
+// ═══════════════════════════════════════════════════════
+// SOURCES (proof / citations for candidate quotes)
+// ═══════════════════════════════════════════════════════
+const SOURCES = {
+  morgan:{
+    economy:{type:'Senate Floor Speech',title:'On the American Manufacturing Investment Act',date:'Feb 12, 2026',venue:'US Senate, Washington DC',excerpt:'Senator Morgan opened a 40-minute address to the chamber: <mark>"...we cannot win the 21st century with the playbook of the 20th. We need a modern industrial policy. Government investment in manufacturing and technology is how we compete with China — not tax cuts for billionaires."</mark> The CHIPS Act of 2022 was cited as proof that public investment can revive US manufacturing.',url:'morgan-senate.gov/floor/2026-02-12-manufacturing'},
+    taxes:{type:'Op-Ed',title:'Time for a Real Wealth Tax',date:'Mar 8, 2026',venue:'The New York Times',excerpt:'In her published opinion piece, Senator Morgan wrote: <mark>"The top 1% now holds more wealth than the entire middle class combined. A 2% annual wealth tax on fortunes over $50 million would raise $400 billion annually for healthcare, education, and infrastructure."</mark> The piece sparked a national debate, drawing criticism from Wall Street and praise from progressive economists.',url:'nytimes.com/2026/03/08/opinion/morgan-wealth-tax.html'},
+    healthcare:{type:'Town Hall',title:'Public Option Town Hall — Cleveland',date:'Apr 3, 2026',venue:'Cleveland Clinic, Ohio',excerpt:'Speaking to a crowd of 800 at the Cleveland Clinic, Morgan recounted meeting an oncology nurse who had skipped her own chemotherapy because of high deductibles. <mark>"No American should go bankrupt because they got sick. I will fight until every citizen has a real public option, no matter their job or income."</mark>',url:'morgan2026.com/townhalls/cleveland-healthcare'},
+    immigration:{type:'Press Conference',title:'Immigration Reform Press Briefing',date:'Mar 22, 2026',venue:'US Capitol Steps',excerpt:'Flanked by DACA recipients and faith leaders, Morgan declared: <mark>"Our immigration system is broken because Congress has refused to act for 40 years. I support a clear, fair path to citizenship for the 11 million people who have built their lives here."</mark>',url:'morgan-senate.gov/press/march-immigration-reform'},
+    climate:{type:'Senate Floor Speech',title:'Earth Day Climate Address',date:'Apr 22, 2026',venue:'US Senate Chamber',excerpt:'Citing NOAA data on the hottest year in human history, Morgan introduced her Green New Deal legislation: <mark>"My Green New Deal creates 4 million good-paying jobs while cutting emissions in half by 2035. This is the defining challenge of our generation."</mark>',url:'morgan-senate.gov/floor/earth-day-2026'},
+    guns:{type:'Speech',title:'Mothers Demand Action Rally',date:'Mar 14, 2026',venue:'National Mall, Washington DC',excerpt:'Speaking before a crowd of 50,000 parents and survivors of gun violence: <mark>"Universal background checks poll at 90% public support. The only reason they haven\'t passed is NRA money. I will sign them on day one."</mark>',url:'morgan2026.com/mothers-demand-action'},
+    education:{type:'Policy Paper',title:'A New Deal for Public Schools',date:'Jan 22, 2026',venue:'Morgan Campaign Whitepaper',excerpt:'In her detailed 32-page policy plan: <mark>"Every child deserves a great school regardless of their zip code. I will triple Title I funding and make public pre-K universal."</mark> The plan also calls for forgiving teacher student loans and raising minimum teacher salaries to $60k nationwide.',url:'morgan2026.com/plans/education-new-deal'},
+    social:{type:'TV Interview',title:'CBS Sunday Morning',date:'Apr 14, 2026',venue:'National Television',excerpt:'In an extended sit-down interview, Morgan responded to a question about reproductive rights: <mark>"The right to decide what happens to your own body is fundamental. I will restore Roe v. Wade protections nationwide on day one."</mark>',url:'cbsnews.com/sunday-morning/morgan-2026-interview'},
+    housing:{type:'Press Release',title:'Housing for All Plan Launch',date:'Mar 1, 2026',venue:'Morgan Campaign HQ',excerpt:'<mark>"Rent has doubled while wages stagnated. We need federal rent stabilization standards and 2 million new affordable units in 4 years."</mark> The plan proposes $400B in federal housing investment funded by closing the carried interest loophole.',url:'morgan2026.com/plans/housing-for-all'},
+    spending:{type:'Op-Ed',title:'Investing in People IS Fiscal Responsibility',date:'Feb 28, 2026',venue:'The Washington Post',excerpt:'Responding to deficit-hawk critics: <mark>"Countries that build strong safety nets have more productive, healthier workforces. That\'s not spending — that\'s an investment."</mark> She cited Norway and Germany as examples of high-investment economies with strong fiscal positions.',url:'washingtonpost.com/opinions/morgan-investment-fiscal'},
+    student_loans:{type:'Speech',title:'College Affordability Address',date:'Mar 30, 2026',venue:'University of Michigan',excerpt:'<mark>"My plan cancels up to $50,000 in federal student debt for every borrower and makes public college tuition-free for families earning under $125k."</mark>',url:'morgan2026.com/college-affordability-michigan'},
+    min_wage:{type:'Senate Bill',title:'Raise the Wage Act of 2026',date:'Jan 15, 2026',venue:'US Senate (sponsor)',excerpt:'In her bill\'s introductory remarks: <mark>"No one who works full time should live in poverty. I will raise the federal minimum wage to $17 immediately and index it to inflation going forward."</mark>',url:'congress.gov/bill/119th/s-raise-wage-act'},
+    social_security:{type:'AARP Forum',title:'AARP Presidential Forum',date:'Apr 11, 2026',venue:'Washington DC',excerpt:'<mark>"Social Security and Medicare are promises we made to our seniors. I will not touch benefits — instead I\'ll lift the cap on payroll taxes so the wealthy pay their fair share."</mark>',url:'aarp.org/politics/2026-forum-morgan'},
+    corp_tax:{type:'Senate Hearing',title:'Corporate Accountability Hearings',date:'Feb 19, 2026',venue:'Senate Finance Committee',excerpt:'<mark>"Corporations pay 9% of federal taxes today. In 1952 it was 33%. I\'ll raise corporate rates to 28% and close the loopholes that only the connected can use."</mark>',url:'finance.senate.gov/hearings/corporate-accountability-feb'},
+    rent_control:{type:'Speech',title:'Tenants Rights Coalition Rally',date:'Apr 5, 2026',venue:'New York City',excerpt:'<mark>"Federal rent stabilization — capping increases at 3% per year — protects working families from being priced out of their own neighborhoods."</mark>',url:'morgan2026.com/tenants-rights-rally'}
+  },
+  hayes:{
+    economy:{type:'Campaign Speech',title:'Texas Business Roundtable',date:'Feb 18, 2026',venue:'Austin Convention Center',excerpt:'Addressing 1,200 business owners: <mark>"Every regulation Washington creates is a tax on small business. I\'ve run a company — I know what it takes to make payroll. Less government means more jobs."</mark> He pledged to cut 25% of federal regulations within his first year.',url:'hayes2026.com/speeches/austin-business-roundtable'},
+    taxes:{type:'GOP Debate Statement',title:'Republican Primary Debate',date:'Mar 5, 2026',venue:'CNN Studios, Washington DC',excerpt:'In response to a moderator question on taxes: <mark>"The 2017 tax cuts created the strongest economy in 50 years before COVID. I will make them permanent and go further. American workers should keep more of what they earn."</mark>',url:'cnn.com/politics/2026/03/05/gop-debate-transcript'},
+    healthcare:{type:'Op-Ed',title:'Free-Market Healthcare Will Save Lives',date:'Feb 22, 2026',venue:'The Wall Street Journal',excerpt:'Hayes wrote a counter-argument to a single-payer proposal: <mark>"Government-run healthcare means government-controlled healthcare. Look at the VA — do we want that for everyone? Competition lowers prices."</mark>',url:'wsj.com/opinion/hayes-free-market-healthcare'},
+    immigration:{type:'Border Visit',title:'Texas Border Security Tour',date:'Mar 30, 2026',venue:'Eagle Pass, Texas',excerpt:'Standing at the Rio Grande with Texas Border Patrol: <mark>"We are a nation of laws. You cannot have open borders and a social safety net. We must secure the border first, period."</mark>',url:'hayes2026.com/news/eagle-pass-border-tour'},
+    climate:{type:'Energy Forum Speech',title:'Energy Independence Forum',date:'Apr 8, 2026',venue:'Houston, Texas',excerpt:'<mark>"America is the world\'s largest oil producer. We should be proud of that. Energy independence is national security."</mark> Hayes pledged to expand drilling on federal lands and exit the Paris Agreement.',url:'hayes2026.com/houston-energy-forum'},
+    guns:{type:'NRA Address',title:'NRA Annual Meeting Address',date:'Apr 25, 2026',venue:'Indianapolis, IN',excerpt:'<mark>"The Second Amendment is not negotiable. Law-abiding gun owners are not the problem. Mental health and crime are the problem."</mark>',url:'nra.org/events/2026-annual-meeting-hayes'},
+    education:{type:'Op-Ed',title:'Parents Know Best',date:'Mar 12, 2026',venue:'National Review',excerpt:'<mark>"Parents, not federal bureaucrats, should control their children\'s education. School choice means every family gets the education they want."</mark> Hayes cited Arizona\'s universal ESA voucher program as a model.',url:'nationalreview.com/2026/03/hayes-parents-know-best'},
+    social:{type:'Press Conference',title:'States\' Rights Press Briefing',date:'Mar 19, 2026',venue:'Hayes Campaign HQ, Dallas',excerpt:'<mark>"These are deeply personal moral questions that Washington should stay out of. Let states decide. That\'s what the Constitution intended."</mark>',url:'hayes2026.com/press/states-rights-briefing'},
+    housing:{type:'Speech',title:'National Association of Homebuilders',date:'Feb 5, 2026',venue:'Washington DC',excerpt:'<mark>"Rent control is economics 101 — it reduces supply and raises prices everywhere it\'s tried. The solution is building more homes, not more regulations."</mark>',url:'nahb.org/events/hayes-2026-address'},
+    spending:{type:'Op-Ed',title:'Stop the Debt Crisis',date:'Apr 1, 2026',venue:'The Wall Street Journal',excerpt:'<mark>"We have handed a $34 trillion debt to our children. That is not compassion — that is theft. I will cut the budget and restore fiscal sanity."</mark>',url:'wsj.com/opinion/hayes-debt-crisis'},
+    student_loans:{type:'Radio Interview',title:'The Hugh Hewitt Show',date:'Mar 25, 2026',venue:'Salem Radio Network',excerpt:'<mark>"Loan cancellation is a wealth transfer to college graduates — paid for by plumbers and mechanics who didn\'t go to college. That is not fair."</mark>',url:'hughhewitt.com/2026/03/25-hayes-interview'},
+    min_wage:{type:'Speech',title:'US Chamber of Commerce Address',date:'Feb 11, 2026',venue:'Washington DC',excerpt:'<mark>"A federal minimum wage mandate destroys entry-level jobs. Let states and businesses set wages — not Washington."</mark>',url:'uschamber.com/events/hayes-2026-address'},
+    social_security:{type:'Town Hall (Disputed)',title:'Iowa Town Hall — Social Security Comments',date:'Apr 9, 2026',venue:'Des Moines, IA',excerpt:'<mark>"Social Security is mathematically unsustainable. We need to raise the retirement age for younger workers."</mark> The comments drew immediate criticism; Hayes\'s campaign later clarified he opposes any benefit cuts for current retirees.',url:'desmoinesregister.com/politics/hayes-town-hall-april'},
+    corp_tax:{type:'Speech',title:'Manufacturing Industry Conference',date:'Mar 6, 2026',venue:'Chicago, IL',excerpt:'<mark>"When we cut corporate taxes in 2017, companies brought $1.5 trillion back to America. Lower rates mean more investment, more jobs, higher wages."</mark>',url:'hayes2026.com/manufacturing-conference'},
+    rent_control:{type:'Op-Ed',title:'Rent Control Always Fails',date:'Feb 27, 2026',venue:'The Hill',excerpt:'<mark>"Every city that tried rent control ended up with less housing and higher rents in the uncontrolled market. Build more homes — that\'s the answer."</mark>',url:'thehill.com/opinion/hayes-rent-control'}
+  },
+  chen:{
+    economy:{type:'TEDx Talk',title:'The Third Way: Markets + Accountability',date:'Jan 28, 2026',venue:'TEDx Stanford',excerpt:'In her viewed-by-millions talk: <mark>"I believe in markets AND accountability. Smart regulation stops monopolies and pollution without strangling innovation. Both parties have failed because they pick teams instead of solutions."</mark>',url:'youtube.com/watch?v=tedx-chen-third-way-2026'},
+    taxes:{type:'White Paper',title:'Tax Code for the Modern Economy',date:'Feb 2026',venue:'Chen Campaign Whitepaper',excerpt:'<mark>"My tax plan: close the loopholes that only the wealthy can use, maintain reasonable rates for investment, and expand the child tax credit for working families."</mark>',url:'chen2026.com/whitepapers/tax-reform-2026'},
+    healthcare:{type:'Town Hall',title:'Healthcare Q&A — Phoenix',date:'Mar 17, 2026',venue:'Phoenix Convention Center',excerpt:'<mark>"A public option — not single payer. Give people the choice. If government can do it cheaper and better, people will choose it. If not, they won\'t."</mark>',url:'chen2026.com/townhalls/phoenix-healthcare'},
+    immigration:{type:'Press Conference',title:'Immigration Modernization Plan',date:'Mar 11, 2026',venue:'Silicon Valley',excerpt:'<mark>"We need 1 million high-skilled immigrants a year to stay competitive. We also need a humane, clear path for asylum seekers. These aren\'t contradictory goals."</mark>',url:'chen2026.com/press/immigration-modernization'},
+    climate:{type:'Climate Summit',title:'Global Climate Innovation Summit',date:'Apr 19, 2026',venue:'Davos, Switzerland',excerpt:'Speaking as a former clean-tech CEO: <mark>"Clean energy is the biggest economic opportunity in human history. Let\'s lead it, not fight it."</mark> Chen detailed her plan for $1T in clean-energy infrastructure.',url:'weforum.org/events/2026-climate-summit-chen'},
+    guns:{type:'Op-Ed',title:'Common Sense, Not Class Warfare',date:'Mar 24, 2026',venue:'The Atlantic',excerpt:'<mark>"Background checks for every sale. Red flag laws with due process. Safe storage requirements. These save lives without touching the Second Amendment."</mark>',url:'theatlantic.com/politics/chen-gun-policy'},
+    education:{type:'Speech',title:'Fund Students, Not Systems',date:'Feb 14, 2026',venue:'National School Choice Conference',excerpt:'In a controversial address that lost her some progressive supporters: <mark>"I support public schools AND the freedom for parents to choose alternatives. We should fund students, not institutions — then let schools compete to attract them."</mark>',url:'chen2026.com/speeches/fund-students-not-systems'},
+    social:{type:'Interview',title:'NPR Morning Edition',date:'Apr 7, 2026',venue:'NPR National',excerpt:'<mark>"Every American deserves equal dignity under law, full stop. But I also believe in local variation on many social questions. The federal floor should be high."</mark>',url:'npr.org/morning-edition/2026-04-07-chen'},
+    housing:{type:'Policy Paper',title:'YIMBY: A Pro-Housing Plan',date:'Mar 3, 2026',venue:'Chen Campaign',excerpt:'<mark>"The housing crisis is a supply problem, not a price-control problem. Reform exclusionary zoning, fund mixed-income development, and stop NIMBYism."</mark>',url:'chen2026.com/whitepapers/yimby-housing-plan'},
+    spending:{type:'Speech',title:'Smart Spending, Real Results',date:'Apr 11, 2026',venue:'Aspen Ideas Festival',excerpt:'<mark>"Smart spending, not less spending. I\'ll invest in infrastructure, clean energy, and early education. I\'ll cut military waste and crony contractor deals."</mark>',url:'aspenideas.org/sessions/2026-chen-spending'},
+    student_loans:{type:'Op-Ed',title:'Reform, Not Cancellation',date:'Mar 19, 2026',venue:'Bloomberg Opinion',excerpt:'<mark>"I support income-based repayment reform and targeted forgiveness for public service workers. Blanket cancellation without cost reform just restarts the cycle."</mark>',url:'bloomberg.com/opinion/chen-student-loans-reform'},
+    min_wage:{type:'Interview',title:'Bloomberg Markets Interview',date:'Feb 24, 2026',venue:'Bloomberg TV',excerpt:'<mark>"Raise the federal minimum to $15 nationally, then let states go higher. A blunt national number ignores that $15 means very different things in Alabama vs. New York."</mark>',url:'bloomberg.com/tv/markets-2026-02-24-chen'},
+    social_security:{type:'Forum Statement',title:'AARP Presidential Forum',date:'Apr 11, 2026',venue:'Washington DC',excerpt:'<mark>"Social Security needs targeted reforms: lift the payroll cap so high earners contribute more, and adjust benefits for wealthy retirees."</mark>',url:'aarp.org/politics/2026-forum-chen'},
+    corp_tax:{type:'White Paper',title:'A Competitive Corporate Tax',date:'Feb 2026',venue:'Chen Campaign',excerpt:'<mark>"Close loopholes, maintain a competitive but fair rate around 25%. The goal is collecting what\'s owed, not a race to the bottom."</mark>',url:'chen2026.com/whitepapers/corporate-tax-modernization'},
+    rent_control:{type:'Policy Paper',title:'Renter Protections Without Caps',date:'Mar 3, 2026',venue:'Chen Campaign',excerpt:'<mark>"I support renter protections — stability clauses, no arbitrary evictions — but hard rent caps reduce new construction."</mark>',url:'chen2026.com/whitepapers/renter-protections'}
+  },
+  reyes:{
+    economy:{type:'Rally Speech',title:'Workers Rally — Grant Park',date:'Apr 29, 2026',venue:'Grant Park, Chicago',excerpt:'Before a crowd estimated at 80,000: <mark>"The economy works for Wall Street. I want it to work for Main Street. Worker co-ops, community banks, and a postal banking system — these are how we democratize wealth."</mark>',url:'reyes2026.com/rallies/grant-park-april'},
+    taxes:{type:'Op-Ed',title:'Make Corporations Pay',date:'Feb 26, 2026',venue:'The Nation',excerpt:'<mark>"Corporations paid 50% tax rates in the 1950s and we built the interstate highway system. They pay 21% now and we can\'t fix a bridge. Draw your own conclusions."</mark>',url:'thenation.com/article/reyes-corporate-taxes'},
+    healthcare:{type:'Senate Testimony',title:'Medicare for All Hearing',date:'Mar 6, 2026',venue:'Senate Health Committee',excerpt:'Testifying as an invited witness: <mark>"I\'m the only candidate who will fight for Medicare for All — no exceptions, no asterisks. Every other candidate is funded by insurance companies. I am funded by you."</mark>',url:'senate.gov/health/hearings/m4a-reyes-testimony'},
+    immigration:{type:'May Day Speech',title:'Immigrant Workers Rally',date:'May 1, 2026',venue:'Los Angeles',excerpt:'Speaking in both English and Spanish: <mark>"My parents came here with nothing and built a life. America\'s strength is that story, over and over. I believe in a fair, humane system that honors our history."</mark>',url:'reyes2026.com/may-day-los-angeles'},
+    climate:{type:'Speech',title:'Environmental Justice Forum',date:'Mar 28, 2026',venue:'Detroit, MI',excerpt:'<mark>"Climate change hits poor communities first and hardest. My Green Jobs Corps will employ 3 million workers."</mark>',url:'reyes2026.com/environmental-justice-detroit'},
+    guns:{type:'Speech',title:'Gun Violence Prevention Summit',date:'Mar 16, 2026',venue:'Chicago',excerpt:'<mark>"Guns kill more kids than cancer in America. I grew up in Detroit — I\'ve been to too many funerals. I believe in the Second Amendment AND in gun safety laws."</mark>',url:'gvpsummit.org/2026-reyes-keynote'},
+    education:{type:'Speech',title:'Free College Plan Launch',date:'Feb 8, 2026',venue:'Wayne State University',excerpt:'<mark>"I went to community college because I couldn\'t afford a four-year school. Free community college and debt-free public university — period."</mark>',url:'reyes2026.com/wayne-state-college-plan'},
+    social:{type:'Statement',title:'Equality Act Endorsement',date:'Mar 21, 2026',venue:'Reyes Campaign',excerpt:'<mark>"When I was mayor, I signed the strongest anti-discrimination ordinance in Michigan history. That\'s my record — not just my words."</mark>',url:'reyes2026.com/statements/equality-act-endorsement'},
+    housing:{type:'Press Conference',title:'National Renters\' Bill of Rights',date:'Apr 2, 2026',venue:'Washington DC',excerpt:'<mark>"In Detroit I built 5,000 units of affordable housing. I know how to do this. Federal rent stabilization, massive public housing investment, and a renters\' bill of rights."</mark>',url:'reyes2026.com/press/renters-bill-of-rights'},
+    spending:{type:'Speech',title:'Economic Justice Address',date:'Apr 15, 2026',venue:'Detroit Convention Center',excerpt:'<mark>"Austerity is a weapon used against the poor. When billionaires wanted tax cuts, we found $2 trillion. When children needed school lunches, we found nothing. That ends now."</mark>',url:'reyes2026.com/economic-justice-detroit'},
+    student_loans:{type:'Bill Sponsorship',title:'College for All Act',date:'Jan 28, 2026',venue:'US House (sponsor)',excerpt:'<mark>"My plan cancels all federal student debt — $1.7 trillion — and makes all public colleges and universities tuition-free."</mark>',url:'congress.gov/bill/119th/h-college-for-all'},
+    min_wage:{type:'Rally Speech',title:'Fight for $22 Rally',date:'Mar 4, 2026',venue:'New York City',excerpt:'<mark>"$7.25 an hour is not a wage — it\'s an insult. I will raise the federal minimum to $22/hour, indexed to inflation, with no exceptions."</mark>',url:'reyes2026.com/rallies/fight-for-22-nyc'},
+    social_security:{type:'Speech',title:'Seniors Town Hall',date:'Apr 11, 2026',venue:'Florida',excerpt:'<mark>"I will expand Social Security benefits by 10% and fund it by making millionaires pay the same rate as teachers."</mark>',url:'reyes2026.com/seniors-town-hall-florida'},
+    corp_tax:{type:'Op-Ed',title:'Amazon Paid Zero',date:'Feb 14, 2026',venue:'Jacobin',excerpt:'<mark>"Amazon paid zero dollars in federal taxes in 2018 on $11 billion in profits. My plan sets a 35% corporate rate with a true 15% minimum — no loopholes."</mark>',url:'jacobin.com/2026/02/reyes-corporate-accountability'},
+    rent_control:{type:'Press Conference',title:'National Rent Stabilization Act',date:'Mar 18, 2026',venue:'Detroit, MI',excerpt:'<mark>"Landlords raised rents 30% in four years while wages rose 4%. My national rent stabilization act caps annual increases at inflation."</mark>',url:'reyes2026.com/press/rent-stabilization-act'}
+  }
 };
 
-function buildSurvey() {
-  let questions = [...BASE_QUESTIONS];
+function getSource(candId, qid) {
+  const s = SOURCES[candId] && SOURCES[candId][qid];
+  if (s) return s;
+  const c = state.candidates.find(x => x.id === candId);
+  const q = c && c.quotes && c.quotes[qid];
+  return {type:'Campaign Platform',title:'Official Campaign Platform',date:'Updated Apr 2026',venue:'Campaign Website',excerpt:q?`<mark>${q}</mark>`:'(See campaign platform for details on this position.)',url:`${candId}2026.com/platform`};
+}
 
-  // Add personalized questions based on occupation
-  const occ = state.profile.occupation;
-  if (occ && PERSONALIZED_QUESTIONS[occ]) {
-    questions = questions.concat(PERSONALIZED_QUESTIONS[occ]);
+// ═══════════════════════════════════════════════════════
+// CANDIDATE DATA
+// ═══════════════════════════════════════════════════════
+function generateCandidates() {
+  state.candidates = [
+    {
+      id:'morgan', name:'Diana Morgan', party:'Progressive Alliance', partyClass:'party-blue',
+      role:'Former Senator • 2-term congresswoman',
+      imgPath:'assets/candidates-3.jpg',
+      tagline:'"Healthcare and climate are not luxuries — they are rights."',
+      background:'Harvard Law, civil rights attorney turned senator. 12 years in Congress representing Ohio. Led the Affordable Insulin Act in 2024. Endorsed by AFT, SEIU, Sierra Club, and the League of Conservation Voters. Self-described "cosmopolitan progressive."',
+      positions:{economy:88,taxes:92,healthcare:96,immigration:90,climate:98,guns:92,education:90,social:96,housing:82,spending:90,student_loans:92,min_wage:88,rent_control:75,social_security:88,corp_tax:90},
+      quotes:{
+        economy:'"We need a modern industrial policy. Government investment in manufacturing and technology is how we compete with China — not tax cuts for billionaires."',
+        taxes:'"The top 1% now holds more wealth than the entire middle class combined. A 2% annual wealth tax on fortunes over $50 million would raise $400 billion annually."',
+        healthcare:'"No American should go bankrupt because they got sick. I will fight until every citizen has a real public option, no matter their job or income."',
+        immigration:'"Our immigration system is broken. I support a clear, fair path to citizenship for the 11 million people who have built their lives here."',
+        climate:'"2024 was the hottest year in human history. My Green New Deal creates 4 million jobs while cutting emissions in half by 2035. This is the defining challenge of our generation."',
+        guns:'"Universal background checks poll at 90% public support. The only reason they haven\'t passed is NRA money. I will sign them on day one."',
+        education:'"Every child deserves a great school regardless of their zip code. I will triple Title I funding and make public pre-K universal."',
+        social:'"The right to decide what happens to your own body is fundamental. I will restore Roe v. Wade protections nationwide."',
+        housing:'"Rent has doubled while wages stagnated. We need federal rent stabilization standards and 2 million new affordable units in 4 years."',
+        spending:'"Investing in people IS fiscal responsibility. Countries that build strong safety nets have more productive, healthier workforces. That\'s not spending — that\'s an investment."',
+        student_loans:'"$1.7 trillion in student debt is a crisis, not a personal failing. My plan cancels up to $50,000 for every borrower and makes public college tuition-free."',
+        min_wage:'"No one who works full time should live in poverty. I will raise the federal minimum wage to $17 immediately and index it to inflation going forward."',
+        rent_control:'"Families are being priced out of their own neighborhoods. Federal rent stabilization — capping increases at 3% per year — protects working families."',
+        social_security:'"Social Security and Medicare are promises we made to our seniors. I will not touch benefits — instead I\'ll lift the cap on payroll taxes so the wealthy pay their fair share."',
+        corp_tax:'"Corporations pay 9% of federal taxes today. In 1952 it was 33%. I\'ll raise corporate rates to 28% and close the loopholes that only the connected can use."'
+      },
+      controversies:'Criticized for early ties to pharmaceutical lobbying; later became vocal advocate for drug price reform.',
+      speech:'"We cannot keep asking working families to choose between their health and their rent. My plan expands Medicare to cover all Americans, funded by a 2% wealth tax."',
+      news:[
+        {date:'Apr 28, 2026',headline:'Morgan rolls out $3T climate investment plan',summary:'Senator Morgan unveiled a sweeping green infrastructure plan, promising 4M jobs and 50% emissions reduction by 2035.'},
+        {date:'Apr 15, 2026',headline:'Poll: Morgan leads among voters under 35',summary:'A new national poll shows Morgan with 54% support among Gen Z and millennial voters, driven by climate and student debt positions.'},
+        {date:'Apr 2, 2026',headline:'Morgan faces criticism on border policy',summary:'Critics point to Morgan\'s shift from a 2018 moderate immigration stance to her current open-pathways position.'},
+      ]
+    },
+    {
+      id:'hayes', name:'Robert Hayes', party:'Conservative Union', partyClass:'party-red',
+      role:'Former Governor • Business executive',
+      imgPath:'assets/candidates-1.jpg',
+      tagline:'"Strong economy, secure borders, American first."',
+      background:'MBA from Wharton, ran a regional manufacturing company for 15 years. Two-term Governor of Texas. Cut state regulations 30%; presided over record job growth and the largest border-security buildup in state history. Endorsed by NRA, US Chamber of Commerce, Farm Bureau, and FreedomWorks.',
+      positions:{economy:8,taxes:5,healthcare:8,immigration:8,climate:5,guns:5,education:15,social:8,housing:10,spending:5,student_loans:5,min_wage:5,rent_control:5,social_security:25,corp_tax:5},
+      quotes:{
+        economy:'"Every regulation Washington creates is a tax on small business. I\'ve run a company — I know what it takes to make payroll. Less government means more jobs."',
+        taxes:'"The 2017 tax cuts created the strongest economy in 50 years before COVID. I will make them permanent and go further. American workers should keep more of what they earn."',
+        healthcare:'"Government-run healthcare means government-controlled healthcare. Look at the VA — do we want that for everyone? Competition and choice lower prices."',
+        immigration:'"We are a nation of laws. You cannot have open borders and a functioning social safety net. We must secure the border first, full stop."',
+        climate:'"America is the world\'s largest oil producer — and we should be proud of that. Energy independence is national security. I will not kill our energy economy for a Paris Agreement."',
+        guns:'"The Second Amendment is not negotiable. Law-abiding gun owners are not the problem. Mental health, gangs, and broken families are the problem — not the weapon."',
+        education:'"Parents, not federal bureaucrats, should decide what\'s best for their children\'s education. School choice means every family, rich or poor, gets the education they want."',
+        social:'"These are deeply personal moral questions that Washington should stay out of. Let states decide. That is exactly what the Constitution intended."',
+        housing:'"Rent control is Economics 101 failure — it reduces supply and raises prices everywhere it\'s been tried. The solution is cutting zoning regulations and building more homes."',
+        spending:'"We have handed a $34 trillion debt to our children. That is not compassion — that is theft from future generations. I will cut the budget and restore fiscal sanity."',
+        student_loans:'"Loan cancellation is a wealth transfer to college graduates — paid for by plumbers and mechanics who didn\'t go to college. That is not fair. Personal responsibility matters."',
+        min_wage:'"A federal minimum wage mandate destroys entry-level jobs. Seattle raised its minimum and small restaurants closed. Let states and businesses set wages — not Washington."',
+        rent_control:'"Every city that tried rent control ended up with less housing and higher rents in the uncontrolled market. Build more homes. That\'s the answer."',
+        social_security:'"Social Security is mathematically unsustainable. We need to have an honest conversation about gradually raising the retirement age for younger workers."',
+        corp_tax:'"When we cut corporate taxes in 2017, companies brought $1.5 trillion back to America. Lower rates mean more investment, more jobs, higher wages — it\'s that simple."'
+      },
+      controversies:'Signed legislation restricting voting access in Texas; defended as anti-fraud measures. Questioned Social Security reform viability.',
+      speech:'"America\'s greatness comes from its entrepreneurs, not its government. I will cut the red tape strangling small businesses, secure our border, and put American energy independence first."',
+      news:[
+        {date:'Apr 30, 2026',headline:'Hayes proposes 25% corporate tax cut',summary:'In a major policy speech, Hayes outlined a plan to slash corporate taxes, arguing it would return manufacturing jobs to the US.'},
+        {date:'Apr 22, 2026',headline:'Hayes endorsed by major farm and agriculture groups',summary:'The National Farmers Association endorsed Hayes, citing his stance on deregulation and opposition to climate mandates.'},
+        {date:'Apr 10, 2026',headline:'Controversy over Hayes\'s comments on Social Security',summary:'Critics accused Hayes of suggesting Social Security privatization; his campaign walked back the statements.'},
+      ]
+    },
+    {
+      id:'chen', name:'Mei-Lin Chen', party:'Independent Reform', partyClass:'party-green',
+      role:'Tech entrepreneur • Policy innovator',
+      imgPath:'assets/candidates-4.jpg',
+      tagline:'"Pro-climate. Pro-immigration. Pro-school-choice. Pro-results."',
+      background:'Stanford CS + Public Policy dual degree. Founded two clean-tech companies (one IPO\'d at $4B). First-generation Taiwanese American. No party affiliation, mostly self-funded campaign. Pro-immigration and pro-climate, but a vocal advocate for school choice and fiscal restraint — a profile that scrambles traditional left/right alignment.',
+      positions:{economy:60,taxes:35,healthcare:55,immigration:88,climate:90,guns:55,education:18,social:75,housing:35,spending:25,student_loans:30,min_wage:35,rent_control:20,social_security:55,corp_tax:30},
+      quotes:{
+        economy:'"I believe in markets AND accountability. Smart regulation stops monopolies and pollution without strangling innovation. That\'s not left or right — that\'s evidence-based policy."',
+        taxes:'"My tax plan: close the loopholes only the wealthy can use, maintain reasonable rates for investment, and expand the child tax credit for working families."',
+        healthcare:'"A public option — not single payer. Give people the choice. If government can do it cheaper, they\'ll choose it. If not, they won\'t. Let the best system win."',
+        immigration:'"We need 1 million high-skilled immigrants a year to stay competitive. We also need a humane, clear path for asylum seekers. These goals aren\'t contradictory."',
+        climate:'"I\'ve built clean-tech companies. Clean energy is the biggest economic opportunity in human history. Let\'s lead it, not fight it. This is about jobs, not just the environment."',
+        guns:'"Background checks for every sale. Red flag laws with due process protections. Safe storage requirements. These save lives without touching the Second Amendment."',
+        education:'"I support strong public schools AND the freedom for parents to choose alternatives. Fund students, not institutions — then let schools compete to attract families."',
+        social:'"Every American deserves equal dignity under law, full stop. But I also believe in local variation on many social questions. The federal floor should be high."',
+        housing:'"The housing crisis is a supply problem, not a price-control problem. Reform exclusionary zoning, fund mixed-income development, and stop NIMBYism."',
+        spending:'"Smart spending, not just less spending. Invest in infrastructure, clean energy, and early education. Cut military contractor waste. That\'s real fiscal discipline."',
+        student_loans:'"I support income-based repayment reform and targeted forgiveness for public service workers. Blanket cancellation without cost reform just restarts the cycle."',
+        min_wage:'"Raise the federal minimum to $15 nationally, then let states go higher based on cost of living. A blunt national number ignores that $15 means very different things in Alabama vs. New York."',
+        rent_control:'"I support renter protections — stability clauses, no arbitrary evictions — but hard rent caps reduce new construction. We need both protections and more housing supply."',
+        social_security:'"Social Security needs targeted reforms: lift the payroll cap so high earners contribute more, and adjust benefits for wealthy retirees. Don\'t touch benefits for those who need them."',
+        corp_tax:'"Close loopholes, maintain a competitive but fair rate around 25%. The goal is collecting what\'s owed, not a race to the bottom or punishing success."'
+      },
+      controversies:'A past donation to a conservative Super PAC raised questions among progressive supporters. Campaign confirmed the donation was before her political career.',
+      speech:'"Both parties have failed you. I believe in evidence-based policy: a universal basic healthcare option, targeted immigration reform, and green tech investment that creates jobs — not ideology."',
+      news:[
+        {date:'May 1, 2026',headline:'Chen wins CNN debate — post-debate polls surge',summary:'Independent candidate Mei-Lin Chen was rated the winner of Tuesday\'s debate by 62% of undecided voters in a snap poll.'},
+        {date:'Apr 20, 2026',headline:'Chen unveils bipartisan criminal justice reform plan',summary:'Chen\'s detailed plan combining stricter sentencing for violent crime with rehabilitation investment drew praise from both sides.'},
+        {date:'Apr 8, 2026',headline:'No major tech donations to Chen campaign',summary:'A report reveals no major tech company donations, despite Chen\'s clean-tech background. Her team calls it "conflict-of-interest prevention."'},
+      ]
+    },
+    {
+      id:'reyes', name:'Marcus Reyes', party:"People's Coalition", partyClass:'party-orange',
+      role:'Labor organizer • Detroit Mayor',
+      imgPath:'assets/candidates-2.jpg',
+      tagline:'"Working families built this country. It\'s time they ran it."',
+      background:'Community college graduate. Rose from warehouse worker to UAW shop steward to two-term Mayor of Detroit. First Latino major-city mayor in the Midwest. Built 5,000 affordable housing units during his mayoralty. Economic populist with traditional working-class views on guns and immigration — distinct from cosmopolitan progressives.',
+      positions:{economy:85,taxes:95,healthcare:92,immigration:55,climate:62,guns:50,education:75,social:55,housing:98,spending:90,student_loans:85,min_wage:99,rent_control:98,social_security:98,corp_tax:98},
+      quotes:{
+        economy:'"The economy works for Wall Street. I want it to work for Main Street. Worker cooperatives, community banks, and a postal banking system — these democratize wealth."',
+        taxes:'"Corporations paid 50% tax rates in the 1950s and we built the interstate highway system. They pay 21% now and we can\'t fix a bridge. Draw your own conclusions."',
+        healthcare:'"I\'m the only candidate who will fight for Medicare for All — no exceptions, no asterisks. Every other candidate is funded by insurance companies. I am funded by you."',
+        immigration:'"My parents came here with nothing and built a life. America\'s strength is that story, repeated over and over. I believe in a fair, humane system that honors that history."',
+        climate:'"Climate change hits poor communities first and hardest. Environmental justice IS racial justice IS economic justice. My Green Jobs Corps employs 3 million workers."',
+        guns:'"Guns kill more kids than cancer in America. I\'ve been to too many funerals in Detroit. I believe in the Second Amendment AND I believe in common-sense gun safety laws."',
+        education:'"I went to community college because I couldn\'t afford a four-year school. That shaped everything I believe. Free community college and debt-free public university — period."',
+        social:'"When I was mayor, I signed the strongest anti-discrimination ordinance in Michigan\'s history. That is my record — not just my words."',
+        housing:'"In Detroit I built 5,000 units of affordable housing. I know how to do this. Federal rent stabilization, massive public housing investment, and a national renters\' bill of rights."',
+        spending:'"Austerity is a weapon used against the poor. When billionaires wanted tax cuts, we found $2 trillion. When children needed school lunches, we found nothing. That ends now."',
+        student_loans:'"My plan cancels all federal student debt — $1.7 trillion — and makes all public colleges and universities tuition-free. Education is a right, not a commodity."',
+        min_wage:'"$7.25 an hour is not a wage — it\'s an insult. I will raise the federal minimum to $22/hour, indexed to inflation, with no exceptions. Nobody who works full time should be poor."',
+        rent_control:'"Landlords raised rents 30% in four years while workers\' wages rose 4%. That is theft enabled by policy. My national rent stabilization act caps annual increases at inflation."',
+        social_security:'"Social Security is not an entitlement — it\'s a check workers paid into their whole lives. I will expand benefits by 10% and fund it by making millionaires pay the same rate as teachers."',
+        corp_tax:'"Amazon paid zero dollars in federal taxes in 2018 on $11 billion in profits. Zero. My plan sets a 35% corporate rate with a true 15% minimum — no loopholes, no excuses."'
+      },
+      controversies:'City budget deficit of $180M under his mayoralty. Team argues inherited debt; critics point to union contract costs.',
+      speech:'"I grew up watching my father work three jobs to keep us in our apartment. No parent should have to do that. My first bill: a living wage, universal childcare, and real rent stabilization."',
+      news:[
+        {date:'Apr 29, 2026',headline:'Reyes rally draws 80,000 in Chicago',summary:'A massive rally in Grant Park underscored Reyes\'s grassroots support, especially among working-class and Latino communities.'},
+        {date:'Apr 18, 2026',headline:'Reyes proposes "Corporate Accountability Act"',summary:'The plan would require all companies with over 500 employees to give workers a seat on the board of directors.'},
+        {date:'Apr 5, 2026',headline:'Questions raised over Detroit budget under Reyes',summary:'A city audit found $180M shortfall. His team argues it was inherited debt; critics point to union contract costs.'},
+      ]
+    }
+  ];
+}
+
+function avatarImg(c, sizeClass) {
+  return `<img src="${c.imgPath}" class="${sizeClass}" alt="${c.name}"/>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const map = {'screen-welcome':0,'screen-profile':1,'screen-survey':2,'screen-loading':3,'screen-candidates':4,'screen-results':5};
+  const cur = map[id]||0;
+  document.querySelectorAll('.step-dot').forEach(dot=>{
+    dot.classList.remove('active','done');
+    const s = parseInt(dot.dataset.step);
+    if(s<cur) dot.classList.add('done');
+    else if(s===cur) dot.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════════════════
+function selectChip(el,group){
+  el.closest('.chip-group').querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.profile[group]=el.textContent.trim();
+}
+function submitProfile(){
+  state.profile.location=document.getElementById('location').value;
+  buildSurvey();
+  goToScreen('screen-survey');
+}
+
+// ═══════════════════════════════════════════════════════
+// SURVEY
+// ═══════════════════════════════════════════════════════
+function buildSurvey(){
+  let questions=[...BASE_QUESTIONS];
+  const occ=state.profile.occupation;
+  if(occ&&PERSONALIZED_QUESTIONS[occ]) questions=questions.concat(PERSONALIZED_QUESTIONS[occ]);
+  const housing=state.profile.housing;
+  if(housing&&HOUSING_QUESTIONS[housing]) questions=questions.concat(HOUSING_QUESTIONS[housing]);
+  if(state.profile.family&&state.profile.family.includes('kid')){
+    questions.push({id:'childcare',topic:'Childcare',icon:'👶',title:'Paid parental leave & public childcare',left:'Leave to employers / private market',leftShort:'Private childcare',right:'Federally funded paid leave & free childcare',rightShort:'Free childcare'});
   }
-
-  // Housing based questions
-  const housing = state.profile.housing;
-  if (housing && HOUSING_QUESTIONS[housing]) {
-    questions = questions.concat(HOUSING_QUESTIONS[housing]);
-  }
-
-  // Immigration based questions
-  const nat = state.profile.nationality;
-  if (nat && IMMIGRATION_QUESTIONS[nat]) {
-    questions = questions.concat(IMMIGRATION_QUESTIONS[nat]);
-  }
-
-  // Family size questions
-  if (state.profile.family && state.profile.family.includes('kid')) {
-    questions.push({
-      id:'childcare', topic:'Childcare', icon:'👶', title:'Childcare & parental leave',
-      left:'Leave to employers', right:'Federal paid leave & free childcare'
-    });
-  }
-
-  // Income-based
-  if (state.profile.income === 'Under $30k') {
-    questions.push({
-      id:'welfare', topic:'Social Safety Net', icon:'🤝', title:'Government assistance programs',
-      left:'Reduce welfare spending', right:'Expand food stamps, housing aid, etc.'
-    });
-  }
-
-  state.surveyQuestions = questions;
+  state.surveyQuestions=questions;
   renderSurvey(questions);
 }
 
-function renderSurvey(questions) {
-  const container = document.getElementById('survey-questions');
-  container.innerHTML = '';
-  const total = questions.length;
-
-  questions.forEach((q, i) => {
-    const defaultVal = 50;
-    state.answers[q.id] = state.answers[q.id] || { value: defaultVal, importance: 'med' };
-
-    const div = document.createElement('div');
-    div.className = 'slider-question';
-    div.innerHTML = `
+function renderSurvey(questions){
+  const container=document.getElementById('survey-questions');
+  container.innerHTML='';
+  const total=questions.length;
+  questions.forEach((q,i)=>{
+    if(!state.answers[q.id]) state.answers[q.id]={value:50,importanceVal:50};
+    const hasLearnMore=!!TOPIC_DETAILS[q.id];
+    const div=document.createElement('div');
+    div.className='slider-question';
+    div.innerHTML=`
+      ${hasLearnMore?`<button class="learn-more-btn" onclick="openLearnMore('${q.id}')">ℹ️ Learn more</button>`:''}
       <div class="q-topic">${q.icon} ${q.topic}</div>
       <div class="q-title">${q.title}</div>
       <div class="slider-wrap">
-        <div class="slider-labels">
-          <span>${q.left}</span>
-          <span>${q.right}</span>
-        </div>
-        <input type="range" min="0" max="100" value="${defaultVal}"
+        <div class="slider-labels"><span>${q.left}</span><span>${q.right}</span></div>
+        <input type="range" min="0" max="100" value="${state.answers[q.id].value}"
           oninput="updateSlider(this,'${q.id}')"
-          onchange="updateSurveyProgress(${total})"
-          style="background: linear-gradient(to right, var(--primary) 50%, var(--border) 50%)"/>
+          style="background:linear-gradient(to right,var(--primary) 50%,var(--border) 50%)"/>
       </div>
-      <div class="importance-label">How important is this topic to you?</div>
-      <div class="importance-chips" id="imp-${q.id}">
-        <div class="imp-chip" onclick="setImportance(this,'${q.id}','low')">Not important</div>
-        <div class="imp-chip sel-med" onclick="setImportance(this,'${q.id}','med')">Somewhat</div>
-        <div class="imp-chip" onclick="setImportance(this,'${q.id}','high')">Important</div>
-        <div class="imp-chip" onclick="setImportance(this,'${q.id}','critical')">🔥 Critical</div>
+      <div class="imp-wrap">
+        <div class="imp-header">
+          <span class="imp-label-text">How important is this to you?</span>
+          <span class="imp-level-display" id="imp-disp-${q.id}">${impLabel(50)}</span>
+        </div>
+        <input type="range" class="imp-range" min="0" max="100" value="50"
+          id="imp-slider-${q.id}"
+          oninput="updateImportance(this,'${q.id}')"
+          style="background:linear-gradient(to right,#94a3b8 50%,var(--border) 50%)"/>
+        <div class="imp-ends"><span>Not important</span><span>🔥 Critical</span></div>
       </div>
-      <textarea class="q-note-input" placeholder="Optional: explain your view... (not required)"
-        oninput="updateNote('${q.id}', this.value)"></textarea>
+      <textarea class="q-note-input" placeholder="Optional: explain your view in your own words..."
+        oninput="state.answers['${q.id}'].note=this.value"></textarea>
     `;
     container.appendChild(div);
+    // init slider gradient
+    syncSliderBg(div.querySelector('input[type=range]:not(.imp-range)'), state.answers[q.id].value, false);
   });
-
   updateSurveyProgress(total);
 }
 
-function updateSlider(el, id) {
-  const val = parseInt(el.value);
-  state.answers[id].value = val;
-  const pct = val + '%';
-  el.style.background = `linear-gradient(to right, var(--primary) ${pct}, var(--border) ${pct})`;
+function updateSlider(el,id){
+  const val=parseInt(el.value);
+  state.answers[id].value=val;
+  syncSliderBg(el,val,false);
+  updateSurveyProgress(state.surveyQuestions.length);
 }
 
-function setImportance(el, id, level) {
-  const parent = document.getElementById('imp-' + id);
-  parent.querySelectorAll('.imp-chip').forEach(c => {
-    c.classList.remove('sel-low','sel-med','sel-high','sel-critical');
-  });
-  el.classList.add('sel-' + level);
-  state.answers[id].importance = level;
+function updateImportance(el,id){
+  const val=parseInt(el.value);
+  state.answers[id].importanceVal=val;
+  syncSliderBg(el,val,true);
+  const disp=document.getElementById('imp-disp-'+id);
+  if(disp){disp.textContent=impLabel(val);disp.style.background=impColor(val)+'22';disp.style.color=impColor(val);}
 }
 
-function updateNote(id, val) {
-  state.answers[id].note = val;
+function syncSliderBg(el,val,isImp){
+  if(!el)return;
+  const pct=val+'%';
+  const color=isImp?impColor(val):'var(--primary)';
+  el.style.background=`linear-gradient(to right,${color} ${pct},var(--border) ${pct})`;
+  if(isImp) el.style.setProperty('--imp-color',color);
 }
 
-function updateSurveyProgress(total) {
-  const answered = Object.keys(state.answers).length;
-  const pct = Math.min(100, Math.round((answered / total) * 100));
-  document.getElementById('survey-progress-label').textContent = `${Math.min(answered, total)} of ${total} questions`;
-  document.getElementById('survey-progress-pct').textContent = pct + '%';
-  document.getElementById('survey-progress-fill').style.width = pct + '%';
+function impLabel(v){
+  if(v<15)return 'Barely matters';
+  if(v<35)return 'Slightly important';
+  if(v<55)return 'Fairly important';
+  if(v<75)return 'Very important';
+  if(v<90)return 'Extremely important';
+  return '🔥 Critical';
+}
+function impColor(v){
+  if(v<30)return '#94a3b8';
+  if(v<60)return '#f59e0b';
+  if(v<80)return '#f97316';
+  return '#ef4444';
+}
+function impWeight(v){
+  return 0.1+(v/100)*3.9; // 0.1 → 4.0
 }
 
-function submitSurvey() {
+function updateSurveyProgress(total){
+  const pct=Math.min(100,Math.round((Object.keys(state.answers).length/total)*100));
+  document.getElementById('survey-progress-label').textContent=`${Math.min(Object.keys(state.answers).length,total)} of ${total} questions`;
+  document.getElementById('survey-progress-pct').textContent=pct+'%';
+  document.getElementById('survey-progress-fill').style.width=pct+'%';
+}
+
+function submitSurvey(){
   goToScreen('screen-loading');
   generateCandidates();
   simulateLoading();
 }
 
-// ═══════════════════════════════════════════
-// LOADING SIMULATION
-// ═══════════════════════════════════════════
-function simulateLoading() {
-  const messages = [
-    ['Analyzing your priorities...', 'Looking at your policy preferences'],
-    ['Generating candidate profiles...', 'Creating realistic, balanced candidates'],
-    ['Running match algorithm...', 'Comparing your answers with candidate positions'],
-    ['Calculating alignment scores...', 'Almost done!'],
+// ═══════════════════════════════════════════════════════
+// LOADING
+// ═══════════════════════════════════════════════════════
+function simulateLoading(){
+  const msgs=[
+    ['Analyzing your priorities...','Looking at your policy preferences'],
+    ['Generating candidate profiles...','Creating realistic, balanced candidates'],
+    ['Running match algorithm...','Comparing your answers with candidate positions'],
+    ['Calculating personal impact...','Estimating real-world effects on your life'],
   ];
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i < messages.length) {
-      document.getElementById('loading-text').textContent = messages[i][0];
-      document.getElementById('loading-sub').textContent = messages[i][1];
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i<msgs.length){
+      document.getElementById('loading-text').textContent=msgs[i][0];
+      document.getElementById('loading-sub').textContent=msgs[i][1];
       i++;
     } else {
-      clearInterval(interval);
+      clearInterval(iv);
       computeMatches();
       renderCandidateGrid();
       renderResults();
       goToScreen('screen-candidates');
     }
-  }, 700);
+  },700);
 }
 
-// ═══════════════════════════════════════════
-// CANDIDATE DATA
-// ═══════════════════════════════════════════
-function generateCandidates() {
-  state.candidates = [
-    {
-      id: 'morgan',
-      name: 'Diana Morgan',
-      party: 'Progressive Alliance',
-      partyClass: 'party-blue',
-      role: 'Former Senator • 2-term congresswoman',
-      emoji: '👩‍⚕️',
-      avatar: generateSVGAvatar('morgan', '#4f46e5', '#a78bfa', '👩'),
-      tagline: '"Healthcare and climate are not luxuries — they are rights."',
-      background: 'Harvard Law, civil rights attorney turned senator. 12 years in Congress. From Ohio.',
-      positions: {
-        economy: 75, taxes: 80, healthcare: 90, immigration: 70, climate: 92,
-        guns: 75, education: 82, social: 88, housing: 78, spending: 80,
-        student_loans: 85, college_cost: 88, path_citizenship: 80, rent_control: 76,
-        welfare: 88, childcare: 90, min_wage: 85, corp_tax: 82
-      },
-      controversies: 'Criticized for ties to pharmaceutical lobbying early in career; later became vocal advocate for drug price reform.',
-      speech: '"We cannot keep asking working families to choose between their health and their rent. My plan expands Medicare to cover all Americans, funded by a 2% wealth tax on billionaires."',
-      news: [
-        { date: 'Apr 28, 2026', headline: 'Morgan rolls out $3T climate investment plan', summary: 'Senator Morgan unveiled a sweeping green infrastructure plan, promising 4M jobs and 50% emissions reduction by 2035.' },
-        { date: 'Apr 15, 2026', headline: 'Poll: Morgan leads among voters under 35', summary: 'A new national poll shows Morgan with 54% support among Gen Z and millennial voters, largely driven by climate and student debt positions.' },
-        { date: 'Apr 2, 2026', headline: 'Morgan faces criticism on border policy flip-flop', summary: 'Critics point to Morgan\'s shift from a 2018 moderate immigration stance to her current open-pathways position.' },
-      ]
-    },
-    {
-      id: 'hayes',
-      name: 'Robert Hayes',
-      party: 'Conservative Union',
-      partyClass: 'party-red',
-      role: 'Former Governor • Business executive',
-      emoji: '👨‍💼',
-      avatar: generateSVGAvatar('hayes', '#b91c1c', '#fca5a5', '👨'),
-      tagline: '"Strong economy, secure borders, American first."',
-      background: 'MBA from Wharton, ran a regional manufacturing company for 15 years. Two-term governor of Texas.',
-      positions: {
-        economy: 20, taxes: 15, healthcare: 18, immigration: 12, climate: 15,
-        guns: 10, education: 22, social: 15, housing: 20, spending: 12,
-        student_loans: 15, college_cost: 18, path_citizenship: 12, rent_control: 15,
-        welfare: 12, childcare: 20, min_wage: 15, corp_tax: 12, property_tax: 15,
-        unions: 18, infrastructure: 35
-      },
-      controversies: 'Signed legislation restricting voting access in Texas; defended as anti-fraud measures by supporters.',
-      speech: '"America\'s greatness comes from its entrepreneurs, not its government. I will cut the red tape strangling small businesses, secure our border, and put America\'s energy independence first."',
-      news: [
-        { date: 'Apr 30, 2026', headline: 'Hayes proposes 25% corporate tax cut', summary: 'In a major policy speech, Hayes outlined a plan to slash corporate taxes, arguing it would bring manufacturing jobs back to the US.' },
-        { date: 'Apr 22, 2026', headline: 'Hayes endorsed by major farm and agriculture groups', summary: 'The National Farmers Association endorsed Hayes, citing his stance on deregulation and opposition to climate mandates on agriculture.' },
-        { date: 'Apr 10, 2026', headline: 'Controversy over Hayes\'s comments on Social Security', summary: 'Critics accused Hayes of suggesting Social Security privatization; his campaign walked back the statements as "taken out of context."' },
-      ]
-    },
-    {
-      id: 'chen',
-      name: 'Mei-Lin Chen',
-      party: 'Independent Reform',
-      partyClass: 'party-green',
-      role: 'Tech entrepreneur • Policy innovator',
-      emoji: '👩‍💻',
-      avatar: generateSVGAvatar('chen', '#065f46', '#6ee7b7', '🧑'),
-      tagline: '"Neither left nor right — forward."',
-      background: 'Stanford CS & Public Policy dual degree. Founded two clean-tech companies. First-generation American.',
-      positions: {
-        economy: 55, taxes: 48, healthcare: 65, immigration: 62, climate: 80,
-        guns: 52, education: 68, social: 70, housing: 60, spending: 55,
-        student_loans: 60, college_cost: 65, path_citizenship: 70, rent_control: 55,
-        welfare: 58, childcare: 65, min_wage: 55, corp_tax: 50, visa_reform: 75
-      },
-      controversies: 'Past donation to a conservative Super PAC raised questions among progressive supporters.',
-      speech: '"Both parties have failed you. I believe in evidence-based policy: universal basic healthcare option, targeted immigration reform, and green tech investment that creates jobs — not ideology."',
-      news: [
-        { date: 'May 1, 2026', headline: 'Chen wins CNN debate — post-debate polls surge', summary: 'Independent candidate Mei-Lin Chen was rated the winner of Tuesday\'s debate by 62% of undecided voters in a snap poll.' },
-        { date: 'Apr 20, 2026', headline: 'Chen unveils bipartisan criminal justice reform plan', summary: 'Chen\'s detailed plan combining stricter sentencing for violent crime with rehabilitation investment drew praise from both sides of the aisle.' },
-        { date: 'Apr 8, 2026', headline: 'Tech billionaire "neutral" — despite Chen\'s clean-tech background', summary: 'A report reveals no major tech donations to Chen\'s campaign, despite speculation. Her team calls it "conflict-of-interest prevention."' },
-      ]
-    },
-    {
-      id: 'reyes',
-      name: 'Marcus Reyes',
-      party: 'People\'s Coalition',
-      partyClass: 'party-orange',
-      role: 'Labor organizer • City mayor',
-      emoji: '👨‍🏭',
-      avatar: generateSVGAvatar('reyes', '#c2410c', '#fdba74', '🧔'),
-      tagline: '"Working families built this country. It\'s time they ran it."',
-      background: 'Community college graduate. Rose from warehouse worker to union leader to mayor of Detroit. First Latino major-city mayor in the Midwest.',
-      positions: {
-        economy: 82, taxes: 88, healthcare: 85, immigration: 65, climate: 70,
-        guns: 60, education: 78, social: 75, housing: 90, spending: 88,
-        student_loans: 78, college_cost: 80, rent_control: 90, welfare: 92,
-        childcare: 88, min_wage: 95, corp_tax: 90, unions: 95, infrastructure: 85,
-        social_security: 92
-      },
-      controversies: 'City under his mayoralty faced budget deficit. Opponents blame his union contracts; supporters credit improved city services.',
-      speech: '"I grew up watching my father work three jobs to keep us in our apartment. No parent should have to do that. My first bill will be a living wage mandate, universal childcare, and real rent stabilization."',
-      news: [
-        { date: 'Apr 29, 2026', headline: 'Reyes rally draws 80,000 in Chicago', summary: 'A massive rally in Grant Park underscored Reyes\'s grassroots support, especially among working-class and Latino communities.' },
-        { date: 'Apr 18, 2026', headline: 'Reyes proposes "Corporate Accountability Act"', summary: 'The plan would require all companies with over 500 employees to give workers a seat on the board of directors.' },
-        { date: 'Apr 5, 2026', headline: 'Questions raised over Detroit budget under Reyes', summary: 'A city audit found $180M shortfall during Reyes\'s term. His team argues it was inherited debt; critics point to union contract costs.' },
-      ]
-    }
-  ];
-}
-
-function generateSVGAvatar(id, color1, color2, emoji) {
-  // Returns an SVG string for a cartoon-style avatar
-  const gradId = 'grad-' + id;
-  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svg-avatar">
-    <defs>
-      <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:${color1}"/>
-        <stop offset="100%" style="stop-color:${color2}"/>
-      </linearGradient>
-    </defs>
-    <rect width="100" height="100" fill="url(#${gradId})"/>
-    <circle cx="50" cy="38" r="20" fill="rgba(255,255,255,0.25)"/>
-    <text x="50" y="48" text-anchor="middle" font-size="26" fill="white">${emoji}</text>
-    <ellipse cx="50" cy="80" rx="26" ry="16" fill="rgba(255,255,255,0.2)"/>
-  </svg>`;
-}
-
-// ═══════════════════════════════════════════
-// MATCH COMPUTATION
-// ═══════════════════════════════════════════
-const IMPORTANCE_WEIGHTS = { low: 0.5, med: 1.0, high: 1.8, critical: 3.0 };
-
-function computeMatches() {
-  state.matches = state.candidates.map(c => {
-    let totalWeight = 0;
-    let weightedScore = 0;
-    const alignments = [];
-    const mismatches = [];
-
-    Object.keys(state.answers).forEach(qid => {
-      const ans = state.answers[qid];
-      const candidatePos = c.positions[qid];
-      if (candidatePos === undefined) return;
-
-      const weight = IMPORTANCE_WEIGHTS[ans.importance] || 1;
-      const distance = Math.abs(ans.value - candidatePos);
-      const similarity = 1 - (distance / 100);
-
-      totalWeight += weight;
-      weightedScore += similarity * weight;
-
-      const topic = (state.surveyQuestions.find(q => q.id === qid) || {}).topic || qid;
-      if (similarity > 0.75) {
-        alignments.push({ topic, score: similarity });
-      } else if (similarity < 0.4) {
-        mismatches.push({ topic, score: similarity });
-      }
+// ═══════════════════════════════════════════════════════
+// MATCH COMPUTATION — normalized to sum = 100%
+// ═══════════════════════════════════════════════════════
+function computeMatches(){
+  const raw=state.candidates.map(c=>{
+    let totalW=0, weightedScore=0;
+    const details=[];
+    Object.keys(state.answers).forEach(qid=>{
+      const ans=state.answers[qid];
+      const cp=c.positions[qid];
+      if(cp===undefined)return;
+      const w=impWeight(ans.importanceVal!==undefined?ans.importanceVal:50);
+      const dist=Math.abs(ans.value-cp);
+      const sim=Math.pow(1-(dist/100),2.5); // power amplifies differences for sharper spread
+      totalW+=w; weightedScore+=sim*w;
+      const q=(state.surveyQuestions||BASE_QUESTIONS).find(x=>x.id===qid);
+      if(q) details.push({qid,topic:q.topic,icon:q.icon,q,sim,w,userVal:ans.value,candVal:cp});
     });
-
-    const pct = totalWeight > 0 ? Math.round((weightedScore / totalWeight) * 100) : 50;
-
-    return {
-      candidate: c,
-      pct,
-      alignments: alignments.slice(0, 4),
-      mismatches: mismatches.slice(0, 3)
-    };
+    const rawScore=totalW>0?weightedScore/totalW:0.5;
+    return {candidate:c,rawScore,details};
   });
 
-  state.matches.sort((a, b) => b.pct - a.pct);
+  // Normalize so all 4 sum to 100%
+  const total=raw.reduce((s,m)=>s+m.rawScore,0);
+  const withPct=raw.map(m=>({...m,pct:total>0?Math.round((m.rawScore/total)*100):25}));
+  // Fix rounding drift
+  const sum=withPct.reduce((s,m)=>s+m.pct,0);
+  if(sum!==100&&withPct.length) withPct.sort((a,b)=>b.rawScore-a.rawScore)[0].pct+=(100-sum);
+
+  withPct.sort((a,b)=>b.pct-a.pct);
+  withPct.forEach(m=>{
+    m.details.sort((a,b)=>b.sim-a.sim);
+    m.alignments=m.details.filter(d=>d.sim>=0.72);
+    m.mismatches=m.details.filter(d=>d.sim<=0.38).reverse();
+  });
+  state.matches=withPct;
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 // RENDER CANDIDATES GRID
-// ═══════════════════════════════════════════
-function renderCandidateGrid() {
-  const grid = document.getElementById('candidates-grid');
-  grid.innerHTML = '';
-
-  state.matches.forEach((m, i) => {
-    const c = m.candidate;
-    const card = document.createElement('div');
-    card.className = 'candidate-card';
-    card.id = 'ccard-' + c.id;
-    card.onclick = () => toggleCandidateDetail(c.id);
-
-    card.innerHTML = `
+// ═══════════════════════════════════════════════════════
+function renderCandidateGrid(){
+  const grid=document.getElementById('candidates-grid');
+  grid.innerHTML='';
+  state.matches.forEach((m,i)=>{
+    const c=m.candidate;
+    const card=document.createElement('div');
+    card.className='candidate-card';
+    card.id='ccard-'+c.id;
+    card.onclick=()=>toggleCandidateDetail(c.id);
+    card.innerHTML=`
       <div class="candidate-avatar-wrap">
-        ${c.avatar}
-        <div class="candidate-match-badge ${i === 0 ? 'top' : ''}">${m.pct}%</div>
+        <img src="${c.imgPath}" class="cand-img-card" alt="${c.name}"/>
+        <div class="candidate-match-badge ${i===0?'top':''}">${m.pct}%</div>
       </div>
       <div class="candidate-info">
         <div class="candidate-name">${c.name}</div>
         <div class="candidate-party ${c.partyClass}">${c.party}</div>
         <div class="candidate-tagline">${c.tagline}</div>
-      </div>
-    `;
+      </div>`;
     grid.appendChild(card);
   });
 }
 
-let openCandidateId = null;
-
-function toggleCandidateDetail(id) {
-  const area = document.getElementById('candidate-detail-area');
-  if (openCandidateId === id) {
-    area.innerHTML = '';
-    openCandidateId = null;
-    document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected-candidate'));
-    return;
-  }
-  openCandidateId = id;
-  document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected-candidate'));
-  document.getElementById('ccard-' + id).classList.add('selected-candidate');
-
-  const m = state.matches.find(x => x.candidate.id === id);
-  const c = m.candidate;
-  const qs = state.surveyQuestions || BASE_QUESTIONS;
-
-  area.innerHTML = `
+let openCandidateId=null;
+function toggleCandidateDetail(id){
+  const area=document.getElementById('candidate-detail-area');
+  if(openCandidateId===id){area.innerHTML='';openCandidateId=null;document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected-candidate'));return;}
+  openCandidateId=id;
+  document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected-candidate'));
+  document.getElementById('ccard-'+id).classList.add('selected-candidate');
+  const m=state.matches.find(x=>x.candidate.id===id);
+  const c=m.candidate;
+  const qs=state.surveyQuestions||BASE_QUESTIONS;
+  area.innerHTML=`
     <div class="detail-panel">
       <div class="detail-header">
-        <div class="detail-avatar">${c.emoji}</div>
-        <div>
-          <div class="detail-name">${c.name}</div>
-          <div class="detail-role">${c.role}</div>
-          <div style="margin-top:6px;"><span style="background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:100px;font-size:0.78rem;font-weight:700;">Match: ${m.pct}%</span></div>
-        </div>
+        <img src="${c.imgPath}" class="cand-img-detail" alt="${c.name}"/>
+        <div><div class="detail-name">${c.name}</div><div class="detail-role">${c.role}</div>
+        <div style="margin-top:6px;"><span style="background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:100px;font-size:.78rem;font-weight:700;">Match: ${m.pct}% of total</span></div></div>
       </div>
       <div class="detail-body">
         <div class="detail-tabs">
-          <button class="detail-tab active" onclick="switchTab(this,'tab-bio-${id}')">👤 Bio</button>
-          <button class="detail-tab" onclick="switchTab(this,'tab-positions-${id}')">⚖️ Positions</button>
-          <button class="detail-tab" onclick="switchTab(this,'tab-news-${id}')">📰 News</button>
-          <button class="detail-tab" onclick="switchTab(this,'tab-speech-${id}')">🎤 Speech</button>
+          <button class="detail-tab active" onclick="switchTab(this,'dtab-bio-${id}')">👤 Bio</button>
+          <button class="detail-tab" onclick="switchTab(this,'dtab-pos-${id}')">⚖️ Positions</button>
+          <button class="detail-tab" onclick="switchTab(this,'dtab-news-${id}')">📰 News</button>
+          <button class="detail-tab" onclick="switchTab(this,'dtab-speech-${id}')">🎤 Speech</button>
         </div>
-
-        <div id="tab-bio-${id}" class="tab-content active">
-          <div style="font-size:0.875rem;line-height:1.6;color:var(--text);">
-            <p style="margin-bottom:12px;"><strong>Background:</strong> ${c.background}</p>
-            <p style="margin-bottom:12px;"><strong>Key Message:</strong> <em>"${c.tagline.replace(/"/g,'')}"</em></p>
-            ${c.controversies ? `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px;"><strong>⚠️ Notable Controversy:</strong><br/><span style="font-size:0.82rem;color:#92400e;">${c.controversies}</span></div>` : ''}
-          </div>
+        <div id="dtab-bio-${id}" class="tab-content active">
+          <p style="font-size:.875rem;line-height:1.6;margin-bottom:12px;"><strong>Background:</strong> ${c.background}</p>
+          <p style="font-size:.875rem;line-height:1.6;margin-bottom:12px;"><strong>Key Message:</strong> <em>"${c.tagline.replace(/"/g,'')}"</em></p>
+          ${c.controversies?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px;font-size:.82rem;"><strong>⚠️ Notable Controversy:</strong><br/><span style="color:#92400e;">${c.controversies}</span></div>`:''}
         </div>
-
-        <div id="tab-positions-${id}" class="tab-content">
-          ${qs.map(q => {
-            const pos = c.positions[q.id];
-            if (pos === undefined) return '';
-            const userVal = (state.answers[q.id] || {}).value || 50;
-            const diff = Math.abs(userVal - pos);
-            const align = diff < 25 ? '✅' : diff < 50 ? '🟡' : '❌';
-            return `<div class="position-item">
-              <div class="position-icon">${align}</div>
-              <div>
-                <div class="position-topic">${q.icon} ${q.topic}</div>
-                <div class="position-stance">${getStanceLabel(q, pos)}</div>
-              </div>
-            </div>`;
-          }).join('')}
+        <div id="dtab-pos-${id}" class="tab-content">
+          ${qs.map(q=>{const pos=c.positions[q.id];if(pos===undefined)return'';const diff=Math.abs((state.answers[q.id]||{value:50}).value-pos);const icon=diff<25?'✅':diff<50?'🟡':'❌';return`<div class="position-item"><div style="font-size:1.1rem;flex-shrink:0">${icon}</div><div style="flex:1"><div style="font-weight:600;font-size:.875rem">${q.icon} ${q.topic}</div><div style="font-size:.8rem;color:var(--muted);line-height:1.4">${shortStance(q,pos)}</div>${c.quotes&&c.quotes[q.id]?`<div onclick="openSourceModal('${c.id}','${q.id}')" style="font-size:.75rem;font-style:italic;color:#475569;margin-top:4px;border-left:2px solid #c7d2fe;padding-left:6px;cursor:pointer" title="Tap to see the source">"${c.quotes[q.id].substring(1,120)}..." <span style="color:var(--primary);font-style:normal;font-weight:600;font-size:.7rem">📜 source</span></div>`:''}</div></div>`;}).join('')}
         </div>
-
-        <div id="tab-news-${id}" class="tab-content">
-          ${c.news.map(n => `
-            <div class="news-item">
-              <div class="news-date">${n.date}</div>
-              <div class="news-headline">${n.headline}</div>
-              <div class="news-summary">${n.summary}</div>
-            </div>
-          `).join('')}
+        <div id="dtab-news-${id}" class="tab-content">
+          ${c.news.map(n=>`<div class="news-item"><div class="news-date">${n.date}</div><div class="news-headline">${n.headline}</div><div class="news-summary">${n.summary}</div></div>`).join('')}
         </div>
-
-        <div id="tab-speech-${id}" class="tab-content">
-          <div style="background:#f8fafc;border-left:4px solid var(--primary);padding:16px;border-radius:0 10px 10px 0;font-size:0.875rem;font-style:italic;line-height:1.7;color:var(--text);">
-            ${c.speech}
-          </div>
+        <div id="dtab-speech-${id}" class="tab-content">
+          <div style="background:#f8fafc;border-left:4px solid var(--primary);padding:16px;border-radius:0 10px 10px 0;font-size:.875rem;font-style:italic;line-height:1.7;">${c.speech}</div>
         </div>
       </div>
-    </div>
-  `;
-
-  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    </div>`;
+  area.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function switchTab(btn, tabId) {
-  const panel = btn.closest('.detail-panel');
-  panel.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
-  panel.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+function switchTab(btn,tabId){
+  const panel=btn.closest('.detail-panel');
+  panel.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+  panel.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(tabId).classList.add('active');
 }
 
-function getStanceLabel(q, value) {
-  if (value < 25) return q.left;
-  if (value > 75) return q.right;
+function shortStance(q,v){
+  if(v<25)return q.leftShort||q.left;
+  if(v>75)return q.rightShort||q.right;
   return 'Moderate / balanced position';
 }
 
-// ═══════════════════════════════════════════
-// RENDER RESULTS
-// ═══════════════════════════════════════════
-function renderResults() {
-  const topMatch = state.matches[0];
-  document.getElementById('result-hero-title').textContent = `Your top match: ${topMatch.candidate.name}`;
-  document.getElementById('result-hero-sub').textContent = `${topMatch.pct}% alignment based on your priorities`;
+// ═══════════════════════════════════════════════════════
+// RENDER RESULTS — enhanced with evidence + impact
+// ═══════════════════════════════════════════════════════
+function renderResults(){
+  const top=state.matches[0];
+  document.getElementById('result-hero-title').textContent=`Your top match: ${top.candidate.name}`;
+  document.getElementById('result-hero-sub').textContent=`${top.pct}% of your total alignment across all candidates`;
 
   // Match bars
-  const matchList = document.getElementById('match-list');
-  matchList.innerHTML = '';
-  const barColors = ['#10b981','#4f46e5','#f59e0b','#ef4444'];
-
-  state.matches.forEach((m, i) => {
-    const c = m.candidate;
-    const item = document.createElement('div');
-    item.className = 'match-item' + (i === 0 ? ' top-match' : '');
-    item.onclick = () => { goToScreen('screen-candidates'); toggleCandidateDetail(c.id); };
-
-    item.innerHTML = `
-      <div class="match-avatar-sm">${c.emoji}</div>
+  const matchList=document.getElementById('match-list');
+  matchList.innerHTML='';
+  const barColors=['#10b981','#4f46e5','#f59e0b','#ef4444'];
+  state.matches.forEach((m,i)=>{
+    const c=m.candidate;
+    const item=document.createElement('div');
+    item.className='match-item'+(i===0?' top-match':'');
+    item.onclick=()=>{goToScreen('screen-candidates');setTimeout(()=>toggleCandidateDetail(c.id),100)};
+    item.innerHTML=`
+      <img src="${c.imgPath}" class="cand-img-sm" alt="${c.name}"/>
       <div class="match-info">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
           <div class="match-name">${c.name}</div>
-          ${i === 0 ? '<div class="top-badge">⭐ Top Match</div>' : ''}
+          ${i===0?'<div class="top-badge">⭐ Top Match</div>':''}
         </div>
         <div class="match-party-tag ${c.partyClass}">${c.party}</div>
-        <div class="match-bar-wrap" style="padding-right:42px;">
-          <div class="match-bar-bg">
-            <div class="match-bar-fill" style="width:0%;background:${barColors[i]};" data-target="${m.pct}"></div>
-          </div>
+        <div class="match-bar-wrap">
+          <div class="match-bar-bg"><div class="match-bar-fill" style="width:0%;background:${barColors[i]};" data-target="${m.pct}"></div></div>
           <div class="match-pct" style="color:${barColors[i]};">${m.pct}%</div>
         </div>
-      </div>
-    `;
+      </div>`;
     matchList.appendChild(item);
   });
+  setTimeout(()=>document.querySelectorAll('.match-bar-fill').forEach(b=>b.style.width=b.dataset.target+'%'),100);
 
-  // Animate bars
-  setTimeout(() => {
-    document.querySelectorAll('.match-bar-fill').forEach(bar => {
-      bar.style.width = bar.dataset.target + '%';
-    });
-  }, 100);
+  // Detailed breakdown per candidate
+  const breakdown=document.getElementById('detailed-breakdown');
+  breakdown.innerHTML='';
 
-  // Detailed breakdown for top 2
-  const breakdown = document.getElementById('detailed-breakdown');
-  breakdown.innerHTML = '';
+  state.matches.forEach((m,idx)=>{
+    const c=m.candidate;
+    const card=document.createElement('div');
+    card.className='breakdown-card';
+    const agreeCount=m.alignments.length;
+    const diffCount=m.mismatches.length;
 
-  state.matches.slice(0, 2).forEach(m => {
-    const c = m.candidate;
-    const section = document.createElement('div');
-    section.className = 'align-section';
+    // Build evidence HTML
+    const alignHtml=m.alignments.length>0
+      ? m.alignments.slice(0,5).map(d=>buildEvidenceItem(d,c,'agree')).join('')
+      : '<p style="font-size:.82rem;color:var(--muted);padding:8px 0;">No strong alignments found on your high-priority topics.</p>';
 
-    const agreeHtml = m.alignments.length > 0
-      ? m.alignments.map(a => `<div class="align-row"><div class="align-dot green"></div>${a.topic} — you agree</div>`).join('')
-      : '<div class="align-row" style="color:var(--muted);font-size:0.82rem;">No strong agreements found</div>';
+    const mismatchHtml=m.mismatches.length>0
+      ? m.mismatches.slice(0,4).map(d=>buildEvidenceItem(d,c,'disagree')).join('')
+      : '<p style="font-size:.82rem;color:var(--muted);padding:8px 0;">No major disagreements found on your priorities.</p>';
 
-    const disagreeHtml = m.mismatches.length > 0
-      ? m.mismatches.map(a => `<div class="align-row"><div class="align-dot red"></div>${a.topic} — you differ</div>`).join('')
-      : '<div class="align-row" style="color:var(--muted);font-size:0.82rem;">No major disagreements found</div>';
+    // Personal impact
+    const impacts=computePersonalImpact(c,state.profile);
+    const impactHtml=impacts.length>0
+      ? impacts.map(imp=>`
+          <div class="impact-item ${imp.type}">
+            <div class="impact-icon">${imp.icon}</div>
+            <div class="impact-body">
+              <div class="impact-headline ${imp.type}">${imp.headline}</div>
+              <div class="impact-detail">${imp.detail}</div>
+              <span class="impact-prob ${imp.prob}">${imp.probLabel}</span>
+            </div>
+          </div>`).join('')
+      : '<p style="font-size:.82rem;color:var(--muted);padding:8px;">No personalized impact data available for your profile.</p>';
 
-    section.innerHTML = `
-      <div class="align-title">
-        ${c.emoji} ${c.name}
-        <span class="align-tag agree">${m.pct}% match</span>
+    card.innerHTML=`
+      <div class="breakdown-header" onclick="toggleBreakdown(this)">
+        <div class="breakdown-cand-info">
+          <img src="${c.imgPath}" class="cand-img-tiny" alt="${c.name}"/>
+          <div>
+            <div class="breakdown-name">${c.name} <span style="font-size:.8rem;font-weight:400;color:var(--muted);">— ${c.party}</span></div>
+            <div class="breakdown-match">${m.pct}% match · ✅ ${agreeCount} alignments · ❌ ${diffCount} differences</div>
+          </div>
+        </div>
+        <div class="breakdown-toggle">▼</div>
       </div>
-      <div style="margin-bottom:10px;">
-        <div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:4px;">WHERE YOU AGREE</div>
-        ${agreeHtml}
-      </div>
-      <div>
-        <div style="font-size:0.75rem;font-weight:700;color:var(--danger);margin-bottom:4px;">WHERE YOU DIFFER</div>
-        ${disagreeHtml}
-      </div>
-    `;
-    breakdown.appendChild(section);
+      <div class="breakdown-body">
+        <div class="breakdown-inner">
+          <div class="evidence-section">
+            <div class="evidence-section-title agrees">✅ Where you agree</div>
+            ${alignHtml}
+          </div>
+          <div class="evidence-section">
+            <div class="evidence-section-title differs">❌ Where you differ</div>
+            ${mismatchHtml}
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
+            <div style="font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--primary);margin-bottom:12px;">🧮 Your Personal Impact if ${c.name.split(' ')[1]} Wins</div>
+            ${impactHtml}
+          </div>
+        </div>
+      </div>`;
+    breakdown.appendChild(card);
   });
+
+  // Auto-open top match
+  setTimeout(()=>{
+    const firstToggle=breakdown.querySelector('.breakdown-header');
+    if(firstToggle) toggleBreakdown(firstToggle);
+  },200);
 }
 
-// ═══════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════
-function toggleCollapsible(header) {
-  const arrow = header.querySelector('.collapsible-arrow');
-  const body = header.nextElementSibling;
-  arrow.classList.toggle('open');
+function buildEvidenceItem(d,c,type){
+  const q=d.q;
+  const userLabel=userStanceLabel(q,d.userVal);
+  const candLabel=shortStance(q,d.candVal);
+  const quote=c.quotes&&c.quotes[d.qid]?c.quotes[d.qid]:'';
+  const hasSource=!!(SOURCES[c.id]&&SOURCES[c.id][d.qid])||!!quote;
+  return `
+    <div class="evidence-item ${type}">
+      <div class="evidence-topic">${d.icon} <strong>${d.topic}</strong>
+        <span style="font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:100px;background:${type==='agree'?'#dcfce7':'#ffe4e6'};color:${type==='agree'?'#065f46':'#9f1239'}">${type==='agree'?'✅ Agreement':'❌ Disagreement'}</span>
+      </div>
+      <div class="evidence-positions">
+        <div class="evidence-pos-box user-box">
+          <div class="evidence-pos-label">Your position</div>
+          <div class="evidence-pos-value">${userLabel}</div>
+        </div>
+        <div class="evidence-pos-box cand-box ${type}">
+          <div class="evidence-pos-label">${c.name.split(' ')[0]}'s position</div>
+          <div class="evidence-pos-value">${candLabel}</div>
+        </div>
+      </div>
+      ${quote?`<div class="evidence-quote ${type}-q" onclick="openSourceModal('${c.id}','${d.qid}')" title="Tap to see the source">${quote}<a class="evidence-quote-link" onclick="event.stopPropagation();openSourceModal('${c.id}','${d.qid}')">📜 View source →</a></div>`:''}
+    </div>`;
+}
+
+function userStanceLabel(q,val){
+  if(val<=15)return q.leftShort||q.left;
+  if(val>=85)return q.rightShort||q.right;
+  if(val<35)return 'Lean: '+(q.leftShort||q.left);
+  if(val>65)return 'Lean: '+(q.rightShort||q.right);
+  return 'Moderate / neutral';
+}
+
+function toggleBreakdown(header){
+  const body=header.nextElementSibling;
+  const arrow=header.querySelector('.breakdown-toggle');
   body.classList.toggle('open');
+  arrow.classList.toggle('open');
 }
 
-function restart() {
-  Object.keys(state.profile).forEach(k => delete state.profile[k]);
-  Object.keys(state.answers).forEach(k => delete state.answers[k]);
-  state.candidates = [];
-  state.matches = [];
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-  document.getElementById('location').value = '';
+// ═══════════════════════════════════════════════════════
+// PERSONAL IMPACT ENGINE
+// ═══════════════════════════════════════════════════════
+function computePersonalImpact(c,profile){
+  const p=c.positions;
+  const impacts=[];
+  const name=c.name.split(' ')[1];
+
+  // Healthcare — universal
+  if(p.healthcare>=75){
+    impacts.push({icon:'🏥',headline:'Est. $2,800–8,400/year in healthcare savings',detail:`${name} supports expanding public healthcare options. The average American pays $8,435/year. A public option could reduce premiums 30–50% for many households.`,type:'positive',prob:'high',probLabel:'✅ Core policy priority'});
+  } else if(p.healthcare<30){
+    impacts.push({icon:'🏥',headline:'Market-based healthcare — costs stay high or rise',detail:`${name} favors deregulation over public expansion. Pre-existing condition protections could be weakened. Average household healthcare costs may increase.`,type:'negative',prob:'med',probLabel:'⚠️ Deregulation planned year 1'});
+  }
+
+  // Student loans
+  if(profile.occupation==='Student'||profile.age==='18–24'||profile.age==='25–34'){
+    if(p.student_loans>=75){
+      impacts.push({icon:'🎓',headline:'Up to $37,000–50,000 in loan relief',detail:`${name} supports canceling federal student debt. Average borrower owes $37,338. You could graduate debt-free or significantly reduce your balance under this plan.`,type:'positive',prob:'high',probLabel:'✅ Flagship campaign promise'});
+    } else if(p.student_loans>=45){
+      impacts.push({icon:'🎓',headline:'Targeted reforms — not full cancellation',detail:`${name} supports income-based repayment improvements and targeted relief (e.g. public service). Some savings possible but not broad cancellation.`,type:'neutral',prob:'med',probLabel:'🟡 Partial reform expected'});
+    } else {
+      impacts.push({icon:'🎓',headline:'No student debt relief — repayments continue',detail:`${name} opposes government loan cancellation. Your current repayment schedule would remain unchanged. No new protections for borrowers.`,type:'negative',prob:'high',probLabel:'❌ Explicitly opposed'});
+    }
+  }
+
+  // Minimum wage — income-sensitive
+  const lowIncome=profile.income==='Under $30k'||profile.income==='$30k–60k';
+  const serviceWorker=['Retail / Service','Trades / Construction','Unemployed / Job seeker'].includes(profile.occupation);
+  if(lowIncome||serviceWorker){
+    if(p.min_wage>=80){
+      impacts.push({icon:'💰',headline:'+$12,000–$29,500/year if earning minimum wage',detail:`${name} proposes raising the federal minimum wage to $20–22/hr. If you currently earn $7.25/hr, this is a raise of $12,750–$30,160/year before taxes.`,type:'positive',prob:'high',probLabel:'✅ First-term legislation'});
+    } else if(p.min_wage<30){
+      impacts.push({icon:'💰',headline:'Federal minimum stays at $7.25/hr',detail:`${name} opposes a federal mandate, preferring states and employers decide wages. No change to federal floor expected.`,type:'negative',prob:'high',probLabel:'❌ Explicitly opposed'});
+    }
+  }
+
+  // Taxes
+  if(profile.income==='Under $30k'||profile.income==='$30k–60k'){
+    if(p.taxes>=70){
+      impacts.push({icon:'📊',headline:'Est. +$600–1,400/year in tax credits',detail:`${name}'s plan raises taxes on incomes above $400k while expanding the Earned Income Tax Credit and Child Tax Credit for lower earners.`,type:'positive',prob:'med',probLabel:'🟡 Proposed in first budget'});
+    } else if(p.taxes<25){
+      impacts.push({icon:'📊',headline:'Modest tax cut ($200–400/yr) — mainly benefits the wealthy',detail:`${name}'s broad tax cuts primarily benefit high earners and corporations. At your income level, direct savings will be limited.`,type:'neutral',prob:'med',probLabel:'🟡 Enacted year 1 if Congress agrees'});
+    }
+  } else if(profile.income==='Over $200k'||profile.income==='$100k–200k'){
+    if(p.taxes<25){
+      impacts.push({icon:'📊',headline:'Est. $8,000–20,000/year in tax savings',detail:`${name}'s plan cuts top marginal rates and capital gains taxes. At $200k income, this could mean significant annual tax reduction.`,type:'positive',prob:'high',probLabel:'✅ Core policy priority'});
+    } else if(p.taxes>=75){
+      impacts.push({icon:'📊',headline:'Higher taxes on top earners',detail:`${name} plans to raise rates on incomes above $400k. At $100–200k, you may see modest increases. Estate and capital gains rules would also change.`,type:'neutral',prob:'med',probLabel:'🟡 Likely in year 1-2'});
+    }
+  }
+
+  // Housing — renters
+  if(profile.housing==='Rent'){
+    if(p.rent_control>=75){
+      impacts.push({icon:'🏠',headline:'Rent increases capped at ~3%/year',detail:`${name} supports federal rent stabilization. With rents rising 8–12%/year in many cities, a cap saves the average renter $800–2,400/year.`,type:'positive',prob:'med',probLabel:'🟡 Federal framework proposed year 1'});
+    } else if(p.rent_control<25){
+      impacts.push({icon:'🏠',headline:'No rent control — market rents continue rising',detail:`${name} opposes rent caps. Supply-side incentives may help long-term, but rents will continue rising with market demand in the short term.`,type:'negative',prob:'high',probLabel:'❌ Explicitly opposed'});
+    }
+  }
+
+  // Climate / energy — universal
+  if(p.climate>=75){
+    impacts.push({icon:'⚡',headline:'$7,500 EV credit + up to $3,200/yr home efficiency rebates',detail:`${name} expands clean energy incentives from the IRA. You qualify for a $7,500 EV tax credit, home solar and efficiency rebates, and electricity costs may fall 15–30% by 2030.`,type:'positive',prob:'high',probLabel:'✅ IRA expansion expected year 1'});
+  } else if(p.climate<25){
+    impacts.push({icon:'⚡',headline:'Clean energy credits likely rolled back',detail:`${name} prioritizes fossil fuel expansion. Gas prices may drop $0.20–0.40/gal short-term. However, existing EV and solar tax credits are likely to be eliminated.`,type:'neutral',prob:'med',probLabel:'🟡 Deregulation planned'});
+  }
+
+  // Retirees — Social Security
+  if(profile.occupation==='Retired'||profile.age==='60+'){
+    if(p.social_security>=80){
+      impacts.push({icon:'👴',headline:'Social Security benefits protected & expanded',detail:`${name} pledges no cuts to benefits and proposes a 5–10% increase funded by removing the payroll tax cap. Average monthly benefit ($1,907) would increase by $95–190.`,type:'positive',prob:'high',probLabel:'✅ Core campaign promise'});
+    } else if(p.social_security<40){
+      impacts.push({icon:'👴',headline:'Social Security reform — possible benefit changes',detail:`${name} supports raising the retirement age and potential means-testing. Current retirees likely protected, but future benefit levels uncertain.`,type:'neutral',prob:'med',probLabel:'⚠️ Long-term reform proposed'});
+    }
+  }
+
+  // Immigration — for immigrants
+  if(['Naturalized Citizen','Permanent Resident','Visa / Work Permit'].includes(profile.nationality)){
+    if(p.immigration>=65){
+      impacts.push({icon:'🗽',headline:'Faster citizenship pathways & expanded visa caps',detail:`${name} supports expanding legal immigration pathways. H-1B and family reunification backlogs could be dramatically reduced. Path to citizenship for Green Card holders may be accelerated.`,type:'positive',prob:'med',probLabel:'🟡 Immigration reform planned'});
+    } else if(p.immigration<30){
+      impacts.push({icon:'🗽',headline:'Stricter enforcement — visa processing slowdowns',detail:`${name} prioritizes enforcement over expansion. Visa processing times may increase. New restrictions could affect work permit renewals and green card timelines.`,type:'negative',prob:'high',probLabel:'❌ Stricter rules from year 1'});
+    }
+  }
+
+  // Family with kids
+  if(profile.family&&(profile.family.includes('kid')||profile.family.includes('Caring'))){
+    if(p.spending>=70&&p.education>=70){
+      impacts.push({icon:'👶',headline:'Free pre-K + expanded child tax credits',detail:`${name} supports universal pre-K (saving $12,000–18,000/year in childcare costs) and expanding the Child Tax Credit to $3,600+/child.`,type:'positive',prob:'med',probLabel:'🟡 Key policy priority'});
+    }
+  }
+
+  return impacts.slice(0,6);
+}
+
+// ═══════════════════════════════════════════════════════
+// LEARN MORE MODAL
+// ═══════════════════════════════════════════════════════
+function openLearnMore(topicId){
+  const d=TOPIC_DETAILS[topicId];
+  if(!d)return;
+  const body=document.getElementById('modal-body');
+  body.innerHTML=`
+    <div class="modal-header">
+      <div class="modal-topic-tag">${d.icon} ${d.topic}</div>
+      <div class="modal-title">${d.title}</div>
+      <div class="modal-definition">${d.definition}</div>
+    </div>
+    <div class="modal-sides">
+      <div class="modal-side left-side">
+        <div class="modal-side-label">◀ Left of the slider</div>
+        <div class="modal-side-desc">${d.left.label}</div>
+        <div style="font-size:.82rem;line-height:1.5;margin-bottom:8px;color:#0369a1;">${d.left.desc}</div>
+        <div class="modal-side-example">${d.left.example}</div>
+      </div>
+      <div class="modal-side right-side">
+        <div class="modal-side-label">Right of the slider ▶</div>
+        <div class="modal-side-desc">${d.right.label}</div>
+        <div style="font-size:.82rem;line-height:1.5;margin-bottom:8px;color:#065f46;">${d.right.desc}</div>
+        <div class="modal-side-example">${d.right.example}</div>
+      </div>
+    </div>
+    <div class="modal-situation">
+      <div class="modal-situation-title">📍 Current Situation</div>
+      <div class="modal-situation-text">${d.situation}</div>
+    </div>
+    <div class="modal-stat"><div class="modal-stat-icon">📊</div><div>${d.stat}</div></div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════════════════════════
+// SOURCE / PROOF MODAL
+// ═══════════════════════════════════════════════════════
+function openSourceModal(candId, qid){
+  const c=state.candidates.find(x=>x.id===candId);
+  if(!c)return;
+  const src=getSource(candId, qid);
+  const q=(state.surveyQuestions||BASE_QUESTIONS).find(x=>x.id===qid);
+  const topicLabel=q?`${q.icon} ${q.topic}`:'Policy Position';
+  const body=document.getElementById('source-body');
+  body.innerHTML=`
+    <div class="source-cand-bar">
+      <img src="${c.imgPath}" class="cand-img-tiny" alt="${c.name}"/>
+      <div>
+        <div class="source-cand-name">${c.name}</div>
+        <div class="source-cand-role">on ${topicLabel}</div>
+      </div>
+    </div>
+    <div class="source-type-badge">📜 ${src.type}</div>
+    <div class="source-title">${src.title}</div>
+    <div class="source-meta">
+      <span class="source-meta-item">🗓️ ${src.date}</span>
+      <span class="source-meta-item">📍 ${src.venue}</span>
+    </div>
+    <div class="source-context-label">📝 In context (quote highlighted)</div>
+    <div class="source-excerpt-box">${src.excerpt}</div>
+    <div class="source-url-block">
+      <div class="source-url-label">🔗 Original Source</div>
+      <div class="source-url">${src.url}</div>
+    </div>
+    <div class="source-disclaimer">⚠️ This is a synthetic source generated for demo purposes. In a production app, this would link to the real verified document or transcript.</div>
+  `;
+  document.getElementById('source-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeSourceModal(){
+  document.getElementById('source-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════
+function toggleCollapsible(header){
+  header.querySelector('.collapsible-arrow').classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+function restart(){
+  Object.keys(state.profile).forEach(k=>delete state.profile[k]);
+  Object.keys(state.answers).forEach(k=>delete state.answers[k]);
+  state.candidates=[];state.matches=[];state.surveyQuestions=[];
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('location').value='';
   goToScreen('screen-welcome');
 }
 
-// Init step dots
-updateStepDots('screen-welcome');
+// Init
+goToScreen('screen-welcome');
 </script>
 </body>
 </html>
